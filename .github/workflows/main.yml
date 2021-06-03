@@ -50,7 +50,7 @@ jobs:
       - name: Store distributions and libs
         uses: actions/upload-artifact@v2
         with:
-          name: dists-and-libs
+          name: dists-and-libs-${{ matrix.os }}
           retention-days: 14
           path: |
             build/distributions
@@ -62,6 +62,6 @@ jobs:
       - name: Store native-image executable 
         uses: actions/upload-artifact@v2
         with:
-          name: executables
+          name: executables-${{ matrix.os }}
           retention-days: 14
           path: build/executables
