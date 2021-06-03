@@ -49,12 +49,22 @@ jobs:
       - name: Test and Build
         run: ./gradlew build
 
-      - name: Distributions and libs
+      - name: Store distributions and libs
         uses: actions/upload-artifact@v2
         with:
-          name: dist-and-libs
+          name: dists-and-libs
           retention-days: 14
           path: |
             build/distributions
             build/libs
+
+      - name: Build native-image executable 
+        run: ./gradlew nativeImage
+
+      - name: Store native-image executable 
+        uses: actions/upload-artifact@v2
+        with:
+          name: executables
+          retention-days: 14
+          path: build/executables
 
