@@ -42,3 +42,6 @@ jobs:
       - name: Install native-image component
         run: |
           ${{ matrix.gu-binary }} install native-image
+
+      - name: Test and Build
+        run: ./gradlew build
