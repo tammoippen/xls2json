@@ -23,12 +23,19 @@ jobs:
           - os: ubuntu-latest
             gu-binary: gu
             gradle-binary: ./gradlew
+            arch: amd64
+          - os: ubuntu-latest
+            gu-binary: gu
+            gradle-binary: ./gradlew
+            arch: aarch64
           - os: macos-latest
             gu-binary: gu
             gradle-binary: ./gradlew
+            arch: amd64
           - os: windows-latest
             gu-binary: gu.cmd
-            gradle-binary: .\gradlew.cmd
+            gradle-binary: gradlew.cmd
+            arch: amd64
     steps:
       - name: Setup Graalvm
         id: setup-graalvm
@@ -39,7 +46,7 @@ jobs:
           # Java version, optional, defaults to 'java8'. Available options are 'java8' and 'java11'.
           java: 'java11'
           # Architecture flag, optional, defaults to 'amd64'. Available options are 'amd64' and 'aarch64'. Later is available only for linux runners.
-          arch: 'amd64'
+          arch: '${{ matrix.arch }}'
 
       - name: Install native-image component
         run: |
