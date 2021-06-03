@@ -53,6 +53,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: dist-and-libs
+          retention-days: 14
           path: |
             build/distributions
             build/libs
