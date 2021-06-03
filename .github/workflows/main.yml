@@ -48,3 +48,12 @@ jobs:
 
       - name: Test and Build
         run: ./gradlew build
+
+      - name: Distributions and libs
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist-and-libs
+          path: |
+            build/distributions
+            build/libs
+
