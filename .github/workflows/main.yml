@@ -1,3 +1,4 @@
+
 # This is a basic workflow to help you get started with Actions
 
 name: CI
@@ -18,15 +19,19 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        extension: ["", ".cmd"]
+        os: [ubuntu-latest] #, macos-latest, windows-latest]
+        gu-binary: [gu, gu.cmd]
+        gradle-binary: [./gradlew, .\\gradlew.cmd]
         exclude:
           - os: ubuntu-latest
-            extension: .cmd
+            gu-binary: gu.cmd
+            gradle-binary: .\\gradlew.cmd
           - os: macos-latest
-            extension: .cmd
+            gu-binary: gu.cmd
+            gradle-binary: .\\gradlew.cmd
           - os: windows-latest
-            extension: ""
+            gu-binary: gu
+            gradle-binary: ./gradlew
     steps:
       - name: Setup Graalvm
         id: setup-graalvm
@@ -41,13 +46,12 @@ jobs:
 
       - name: Install native-image component
         run: |
-          gu${{ matrix.extension }} install native-image
-
+          ${{ matrix.gu-binary }} install native-image
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Test and Build
-        run: ./gradlew${{ matrix.extension }} build
+        run: ${{ matrix.gradle-binary }} build
 
       - name: Store distributions and libs
         uses: actions/upload-artifact@v2
@@ -57,9 +61,8 @@ jobs:
           path: |
             build/distributions
             build/libs
-
       - name: Build native-image executable 
-        run: ./gradlew${{ matrix.extension }} nativeImage
+        run: ${{ matrix.gradle-binary }} nativeImage
 
       - name: Store native-image executable 
         uses: actions/upload-artifact@v2
@@ -67,4 +70,3 @@ jobs:
           name: executables
           retention-days: 14
           path: build/executables
-
