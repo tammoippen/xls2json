@@ -34,7 +34,7 @@ jobs:
             arch: amd64
           - os: windows-latest
             gu-binary: gu.cmd
-            gradle-binary: gradlew.cmd
+            gradle-binary: "%cd%\gradlew.cmd"
             arch: amd64
     steps:
       - name: Setup Graalvm
