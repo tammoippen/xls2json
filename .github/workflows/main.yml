@@ -28,7 +28,7 @@ jobs:
             gradle-binary: ./gradlew
           - os: windows-latest
             gu-binary: gu.cmd
-            gradle-binary: .\\gradlew.cmd
+            gradle-binary: .\gradlew.cmd
     steps:
       - name: Setup Graalvm
         id: setup-graalvm
