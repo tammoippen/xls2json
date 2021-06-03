@@ -22,7 +22,7 @@ class CLITest {
 
         val exitCode = cmd.execute("--list-tables", file.absolutePath)
         assertEquals(0, exitCode)
-        assertEquals("[\"Sheet1\"]\n", sw.toString())
+        assertEquals("[\"Sheet1\"]" + System.lineSeparator(), sw.toString())
 
     }
 }
