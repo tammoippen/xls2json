@@ -19,19 +19,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest] #, macos-latest, windows-latest]
-        gu-binary: [gu, gu.cmd]
-        gradle-binary: [./gradlew, .\\gradlew.cmd]
-        exclude:
+        include:
           - os: ubuntu-latest
-            gu-binary: gu.cmd
-            gradle-binary: .\\gradlew.cmd
-          - os: macos-latest
-            gu-binary: gu.cmd
-            gradle-binary: .\\gradlew.cmd
-          - os: windows-latest
             gu-binary: gu
             gradle-binary: ./gradlew
+          - os: macos-latest
+            gu-binary: gu
+            gradle-binary: ./gradlew
+          - os: windows-latest
+            gu-binary: gu.cmd
+            gradle-binary: .\\gradlew.cmd
     steps:
       - name: Setup Graalvm
         id: setup-graalvm
