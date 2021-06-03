@@ -22,20 +22,13 @@ jobs:
         include:
           - os: ubuntu-latest
             gu-binary: gu
-            gradle-binary: ./gradlew
-            arch: amd64
-          # - os: ubuntu-latest
-          #   gu-binary: gu
-          #   gradle-binary: ./gradlew
-          #   arch: aarch64
+            shell: bash
           - os: macos-latest
             gu-binary: gu
-            gradle-binary: ./gradlew
-            arch: amd64
+            shell: bash
           - os: windows-latest
             gu-binary: gu.cmd
-            gradle-binary: "%cd%\gradlew.cmd"
-            arch: amd64
+            shell: cmd
     steps:
       - name: Setup Graalvm
         id: setup-graalvm
@@ -46,16 +39,17 @@ jobs:
           # Java version, optional, defaults to 'java8'. Available options are 'java8' and 'java11'.
           java: 'java11'
           # Architecture flag, optional, defaults to 'amd64'. Available options are 'amd64' and 'aarch64'. Later is available only for linux runners.
-          arch: '${{ matrix.arch }}'
+          arch: 'amd64'
 
       - name: Install native-image component
-        run: |
-          ${{ matrix.gu-binary }} install native-image
+        run: ${{ matrix.gu-binary }} install native-image
+
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Test and Build
-        run: ${{ matrix.gradle-binary }} build
+        run: ./gradlew build
+        shell: ${{ matrix.shell }}
 
       - name: Store distributions and libs
         uses: actions/upload-artifact@v2
@@ -65,8 +59,10 @@ jobs:
           path: |
             build/distributions
             build/libs
+
       - name: Build native-image executable 
-        run: ${{ matrix.gradle-binary }} nativeImage
+        run: ./gradlew nativeImage
+        shell: ${{ matrix.shell }}
 
       - name: Store native-image executable 
         uses: actions/upload-artifact@v2
