@@ -22,13 +22,10 @@ jobs:
         include:
           - os: ubuntu-latest
             gu-binary: gu
-            shell: bash
           - os: macos-latest
             gu-binary: gu
-            shell: bash
           - os: windows-latest
             gu-binary: gu.cmd
-            shell: cmd
     steps:
       - name: Setup Graalvm
         id: setup-graalvm
@@ -49,7 +46,6 @@ jobs:
 
       - name: Test and Build
         run: ./gradlew build
-        shell: ${{ matrix.shell }}
 
       - name: Store distributions and libs
         uses: actions/upload-artifact@v2
@@ -62,7 +58,6 @@ jobs:
 
       - name: Build native-image executable 
         run: ./gradlew nativeImage
-        shell: ${{ matrix.shell }}
 
       - name: Store native-image executable 
         uses: actions/upload-artifact@v2
