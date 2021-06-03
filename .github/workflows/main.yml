@@ -43,5 +43,8 @@ jobs:
         run: |
           ${{ matrix.gu-binary }} install native-image
 
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Test and Build
         run: ./gradlew build
