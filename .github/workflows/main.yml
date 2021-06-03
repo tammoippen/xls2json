@@ -24,10 +24,10 @@ jobs:
             gu-binary: gu
             gradle-binary: ./gradlew
             arch: amd64
-          - os: ubuntu-latest
-            gu-binary: gu
-            gradle-binary: ./gradlew
-            arch: aarch64
+          # - os: ubuntu-latest
+          #   gu-binary: gu
+          #   gradle-binary: ./gradlew
+          #   arch: aarch64
           - os: macos-latest
             gu-binary: gu
             gradle-binary: ./gradlew
