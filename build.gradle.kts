@@ -30,9 +30,7 @@ repositories {
     mavenCentral()
 }
 
-configurations {
-  shadowJarConf
-}
+val shadowJarConf by configurations.creating
 
 dependencies {
     // Align versions of all Kotlin components
@@ -58,7 +56,7 @@ dependencies {
     // add uberJar task outputs to uberJar configuration
     shadowJarConf(
         provider { 
-            project.tasks.shadowJar.outputs.files 
+            project.tasks.shadow.outputs.files 
         }
     )
 
@@ -138,7 +136,7 @@ tasks.jacocoTestReport {
 
 nativeImage {
     dependsOn(tasks.shadowJar)
-    runtimeClasspath = project.configurations.shadowJarConf
+    runtimeClasspath = shadowJarConf
 
     graalVmHome = System.getProperty("java.home")
 
