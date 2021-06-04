@@ -152,13 +152,14 @@ nativeImage {
 }
 
 generateNativeImageConfig {
-  enabled = true
-  byRunningApplicationWithoutArguments()
-  byRunningApplication { arguments("-h") }
-  byRunningApplication { arguments("--sheetnames", "src/test/resources/sample.xls") }
-  byRunningApplication { arguments("--sheetnames", "src/test/resources/sample.xlsx") }
-  byRunningApplication { arguments("src/test/resources/sample.xls") }
-  byRunningApplication { arguments("src/test/resources/sample.xlsx") }
+  enabled = false
+  // unnecessary, as we have the config precomuted and checked in
+  // byRunningApplicationWithoutArguments()
+  // byRunningApplication { arguments("-h") }
+  // byRunningApplication { arguments("--list-tables", "src/test/resources/sample.xls") }
+  // byRunningApplication { arguments("--list-tables", "src/test/resources/sample.xlsx") }
+  // byRunningApplication { arguments("src/test/resources/sample.xls") }
+  // byRunningApplication { arguments("src/test/resources/sample.xlsx") }
 }
 
 // Output to build/libs/shadow.jar

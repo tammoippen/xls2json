@@ -65,7 +65,7 @@ java:
 clean:
 	docker run -it --rm \
 			   -v $(PWD):/app \
-			   xls2json-builder:default \
+			   debian:10-slim \
 			   bash -c "rm -rf .gradle build dist"
 
 dist:
