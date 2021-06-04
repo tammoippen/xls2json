@@ -125,7 +125,14 @@ tasks.jacocoTestReport {
     sourceSets(sourceSets.main.get())
 }
 
+configurations {
+    shadowJar
+}
+
 nativeImage {
+    dependsOn(tasks.shadowJar)
+    runtimeClasspath = configurations.shadowJar
+
     graalVmHome = System.getProperty("java.home")
 
     buildType { build ->
