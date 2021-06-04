@@ -58,7 +58,7 @@ dependencies {
     // add uberJar task outputs to uberJar configuration
     shadowJarConf(
         provider { 
-            tasks.shadowJar.outputs.files 
+            project.tasks.shadowJar.outputs.files 
         }
     )
 
@@ -138,7 +138,7 @@ tasks.jacocoTestReport {
 
 nativeImage {
     dependsOn(tasks.shadowJar)
-    runtimeClasspath = configurations.shadowJarConf
+    runtimeClasspath = project.configurations.shadowJarConf
 
     graalVmHome = System.getProperty("java.home")
 
