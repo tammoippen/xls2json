@@ -63,6 +63,6 @@ jobs:
       - name: Store native-image executable 
         uses: actions/upload-artifact@v2
         with:
-          name: executables-${{ matrix.os }}
+          name: executable-${{ matrix.os }}
           retention-days: 14
-          path: build/executables
+          path: build/executable
