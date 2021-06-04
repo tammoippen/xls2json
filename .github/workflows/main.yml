@@ -43,17 +43,20 @@ jobs:
 
       - name: Statics
         run: ./gradlew spotlessCheck --info
+        if: ${{ matrix.os != 'windows-latest' }}
 
       - name: Test
         run: ./gradlew test --info
 
       - name: Build JVM stuff
         run: ./gradlew build --info
+        if: ${{ matrix.os == 'ubuntu-latest' }}
 
       - name: Store distributions and libs
         uses: actions/upload-artifact@v2
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         with:
-          name: dists-and-libs-${{ matrix.os }}
+          name: dists-and-libs
           retention-days: 14
           path: |
             build/distributions
