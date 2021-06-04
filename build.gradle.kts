@@ -30,6 +30,10 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+  shadowJarConf
+}
+
 dependencies {
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -50,6 +54,13 @@ dependencies {
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.junit.jupiter:junit-jupiter-params")
+
+    // add uberJar task outputs to uberJar configuration
+    shadowJarConf(
+        provider { 
+            tasks.shadowJar.outputs.files 
+        }
+    )
 
 }
 
@@ -127,7 +138,7 @@ tasks.jacocoTestReport {
 
 nativeImage {
     dependsOn(tasks.shadowJar)
-    runtimeClasspath = project.configurations.shadowRuntimeElements.get()
+    runtimeClasspath = configurations.shadowJarConf
 
     graalVmHome = System.getProperty("java.home")
 
