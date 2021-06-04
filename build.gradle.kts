@@ -7,6 +7,8 @@ version = "1.0.0"
 val poiVersion = "5.0.0"
 val picocliVersion = "4.6.1"
 val gsonVersion = "2.8.7"
+// configure outputs of shadowJar for nativeImage
+val shadowJarConf by configurations.creating
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
@@ -29,8 +31,6 @@ plugins {
 repositories {
     mavenCentral()
 }
-
-val shadowJarConf by configurations.creating
 
 dependencies {
     // Align versions of all Kotlin components
@@ -55,11 +55,10 @@ dependencies {
 
     // add uberJar task outputs to uberJar configuration
     shadowJarConf(
-        provider { 
-            project.tasks.shadow.get().outputs.files 
+        provider {
+            project.tasks.shadowJar.get().outputs.files
         }
     )
-
 }
 
 application {
@@ -69,11 +68,10 @@ application {
     // applicationDefaultJvmArgs = listOf("-Xmx4G")
 }
 
-distributions {
+sourceSets {
     main {
-        contents {
-            from("./LICENSE")
-            from("./README.md")
+        java {
+            srcDir("$buildDir/generated/kotlin")
         }
     }
 }
@@ -92,14 +90,6 @@ tasks.register<Copy>("generateBuildInfo") {
     from("src/template/kotlin")
     into("$buildDir/generated/kotlin")
     expand(templateContext)
-}
-
-sourceSets {
-    main {
-        java {
-            srcDir("$buildDir/generated/kotlin")
-        }
-    }
 }
 
 tasks.compileKotlin {
@@ -132,6 +122,15 @@ tasks.jacocoTestReport {
         html.isEnabled = true
     }
     sourceSets(sourceSets.main.get())
+}
+
+distributions {
+    main {
+        contents {
+            from("./LICENSE")
+            from("./README.md")
+        }
+    }
 }
 
 nativeImage {
