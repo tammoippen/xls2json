@@ -1,18 +1,18 @@
 package xls2json
 
 import com.google.gson.GsonBuilder
-import java.io.File
-import java.io.PrintWriter
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.util.concurrent.Callable
-import kotlin.system.exitProcess
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
 import picocli.CommandLine.Spec
+import java.io.File
+import java.io.PrintWriter
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.util.concurrent.Callable
+import kotlin.system.exitProcess
 
 fun memory(event: String, err: PrintWriter) {
   val rt = Runtime.getRuntime()
@@ -21,28 +21,29 @@ fun memory(event: String, err: PrintWriter) {
 }
 
 @Command(
-    name = "xls2json",
-    header = ["Open an xls(x|m) file and transform to json.", ""],
-    mixinStandardHelpOptions = true,
-    version = ["xls2json $buildInfoVersion"],
-    description =
-        [
-            "",
-            "  If no `--table`s are provided, then all",
-            "  tables will be extracted.",
-            "",
-            "  All files will be processed one by one,",
-            "  each outputting on line of json.",
-            "",
-        ],
-    footer =
-        [
-            "",
-            "By Tammo Ippen <tammo.ippen@posteo.de>",
-            "Issues: https://github.com/tammoippen/xls2json/issues",
-            "",
-        ],
-    sortOptions = false)
+  name = "xls2json",
+  header = ["Open an xls(x|m) file and transform to json.", ""],
+  mixinStandardHelpOptions = true,
+  version = ["xls2json $buildInfoVersion"],
+  description =
+  [
+    "",
+    "  If no `--table`s are provided, then all",
+    "  tables will be extracted.",
+    "",
+    "  All files will be processed one by one,",
+    "  each outputting on line of json.",
+    "",
+  ],
+  footer =
+  [
+    "",
+    "By Tammo Ippen <tammo.ippen@posteo.de>",
+    "Issues: https://github.com/tammoippen/xls2json/issues",
+    "",
+  ],
+  sortOptions = false
+)
 class XLS2Json : Callable<Int> {
   @Spec lateinit var spec: CommandSpec
 
@@ -62,27 +63,31 @@ class XLS2Json : Callable<Int> {
   var tables = listOf<String>()
 
   @Option(
-      names = ["-p", "--password"],
-      description = ["Password for opening the input file(s)."],
-      order = 3)
+    names = ["-p", "--password"],
+    description = ["Password for opening the input file(s)."],
+    order = 3
+  )
   var password: String? = null
 
   @Option(
-      names = ["-s", "--strip"], description = ["Strip empty columns and empty rows."], order = 3)
+    names = ["-s", "--strip"], description = ["Strip empty columns and empty rows."], order = 3
+  )
   var strip = false
 
   @Option(
-      names = ["-D", "--datetime-format"],
-      description = ["The datetime format.\n[default: '\${DEFAULT-VALUE}']"],
-      defaultValue = "yyyy-MM-dd'T'HH:mm:ss.SSS",
-      order = 3)
+    names = ["-D", "--datetime-format"],
+    description = ["The datetime format.\n[default: '\${DEFAULT-VALUE}']"],
+    defaultValue = "yyyy-MM-dd'T'HH:mm:ss.SSS",
+    order = 3
+  )
   lateinit var dtfmt: String
 
   @Option(
-      names = ["-T", "--time-format"],
-      description = ["The time format.\n[default: '\${DEFAULT-VALUE}']"],
-      defaultValue = "HH:mm:ss.SSS",
-      order = 3)
+    names = ["-T", "--time-format"],
+    description = ["The time format.\n[default: '\${DEFAULT-VALUE}']"],
+    defaultValue = "HH:mm:ss.SSS",
+    order = 3
+  )
   lateinit var tfmt: String
 
   @Parameters(description = ["xls(x|m)-file(s) to transform"]) var files: List<File> = listOf()
@@ -139,11 +144,11 @@ class XLS2Json : Callable<Int> {
   }
 }
 
-fun main(args: Array<String>): Unit {
+fun main(args: Array<String>) {
   // remove java options - already processed
   // e.g. -Xmx14g for max heap size of 14 GB
   val filteredArgs =
-      args.filter { e -> !(e.startsWith("-XX:") || e.startsWith("-Xm") || e.startsWith("-H:")) }
+    args.filter { e -> !(e.startsWith("-XX:") || e.startsWith("-Xm") || e.startsWith("-H:")) }
   val cmd = CommandLine(XLS2Json())
   exitProcess(cmd.execute(*filteredArgs.toTypedArray()))
 }

@@ -1,12 +1,12 @@
 package xls2json
 
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
+import picocli.CommandLine
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
 import kotlin.test.assertEquals
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
-import picocli.CommandLine
 
 class CLITest {
   @ParameterizedTest

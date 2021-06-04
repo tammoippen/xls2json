@@ -66,7 +66,7 @@ sourceSets { main { java { srcDir("$buildDir/generated/kotlin") } } }
 configure<com.diffplug.gradle.spotless.SpotlessExtension> {
   kotlin {
     ktfmt()
-    // ktlint().userData(mapOf("indent_size" to "2", "continuation_indent_size" to "2"))
+    ktlint("0.41.0").userData(mapOf("indent_size" to "2", "continuation_indent_size" to "2"))
   }
   kotlinGradle {
     target("*.gradle.kts")

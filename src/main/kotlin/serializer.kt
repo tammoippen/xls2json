@@ -13,9 +13,9 @@ class LocalDateTimeSerializer(val format: String) : JsonSerializer<LocalDateTime
   val formatter = DateTimeFormatter.ofPattern(format)
 
   override fun serialize(
-      localDateTime: LocalDateTime,
-      srcType: Type,
-      context: JsonSerializationContext
+    localDateTime: LocalDateTime,
+    srcType: Type,
+    context: JsonSerializationContext
   ): JsonElement {
     return JsonPrimitive(formatter.format(localDateTime))
   }
@@ -25,9 +25,9 @@ class LocalTimeSerializer(val format: String) : JsonSerializer<LocalTime> {
   val formatter = DateTimeFormatter.ofPattern(format)
 
   override fun serialize(
-      localTime: LocalTime,
-      srcType: Type,
-      context: JsonSerializationContext
+    localTime: LocalTime,
+    srcType: Type,
+    context: JsonSerializationContext
   ): JsonElement {
     return JsonPrimitive(formatter.format(localTime))
   }

@@ -1,12 +1,12 @@
 package xls2json
 
-import java.io.File
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.DateUtil
 import org.apache.poi.ss.usermodel.FormulaEvaluator
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.WorkbookFactory
+import java.io.File
 
 class Worksheet(val wst: Sheet, val evaluator: FormulaEvaluator) {
   private fun numCell(cell: Cell): Any {
@@ -44,9 +44,10 @@ class Worksheet(val wst: Sheet, val evaluator: FormulaEvaluator) {
       } catch (e: Exception) {
         cellType = cell.cachedFormulaResultType
         System.err.println(
-            "Formular error: ${wst.sheetName}[${row_idx}, ${col_idx}] = '${cell.toString()}'" +
-                "\n  cached type: ${cellType}" +
-                "\n  $e")
+          "Formular error: ${wst.sheetName}[$row_idx, $col_idx] = '$cell'" +
+            "\n  cached type: $cellType" +
+            "\n  $e"
+        )
       }
     }
 
@@ -57,7 +58,8 @@ class Worksheet(val wst: Sheet, val evaluator: FormulaEvaluator) {
       CellType.NUMERIC -> return numCell(cell)
       CellType.ERROR -> {
         System.err.println(
-            "Error cell: ${wst.sheetName}[${row_idx}, ${col_idx}] = '${cell.errorCellValue}'")
+          "Error cell: ${wst.sheetName}[$row_idx, $col_idx] = '${cell.errorCellValue}'"
+        )
         return "Error#${cell.errorCellValue}"
       }
       else -> return null

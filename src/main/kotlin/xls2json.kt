@@ -24,16 +24,17 @@ fun xls2json(wbk: Workbook, tables: List<String>, strip: Boolean): Map<String, A
 
     if (strip) {
       result[table] =
-          rstrip(
-              (0..wst.lastRowNum()).map { row ->
-                rstrip((0..wst.lastCellNum(row)).map { col -> wst[row, col] }, null)
-              },
-              emptyList<List<Any>>())
+        rstrip(
+          (0..wst.lastRowNum()).map { row ->
+            rstrip((0..wst.lastCellNum(row)).map { col -> wst[row, col] }, null)
+          },
+          emptyList<List<Any>>()
+        )
     } else {
       result[table] =
-          (0..wst.lastRowNum()).map { row ->
-            (0..wst.lastCellNum(row)).map { col -> wst[row, col] }
-          }
+        (0..wst.lastRowNum()).map { row ->
+          (0..wst.lastCellNum(row)).map { col -> wst[row, col] }
+        }
     }
   }
 
