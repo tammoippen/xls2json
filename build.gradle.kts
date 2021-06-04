@@ -56,7 +56,7 @@ dependencies {
     // add uberJar task outputs to uberJar configuration
     shadowJarConf(
         provider { 
-            project.tasks.shadow.outputs.files 
+            project.tasks.shadow.get().outputs.files 
         }
     )
 
