@@ -3,7 +3,7 @@
 
 name: CI
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
@@ -41,7 +41,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Test and Build
+      - name: Statics
+        run: ./gradlew spotlessCheck --info
+
+      - name: Test
+        run: ./gradlew test --info
+
+      - name: Build JVM stuff
         run: ./gradlew build --info
 
       - name: Store distributions and libs
@@ -57,10 +63,10 @@ jobs:
       - name: Install native-image component
         run: ${{ matrix.gu-binary }} install native-image
 
-      - name: Build native-image executable 
+      - name: Build native-image executable
         run: ./gradlew nativeImage
 
-      - name: Store native-image executable 
+      - name: Store native-image executable
         uses: actions/upload-artifact@v2
         with:
           name: executable-${{ matrix.os }}
