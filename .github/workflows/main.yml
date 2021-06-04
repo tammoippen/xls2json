@@ -1,0 +1,77 @@
+
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  sample-job:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            gu-binary: gu
+          - os: macos-latest
+            gu-binary: gu
+          - os: windows-latest
+            gu-binary: gu.cmd
+    steps:
+      - name: Setup Graalvm
+        id: setup-graalvm
+        uses: DeLaGuardo/setup-graalvm@master
+        with:
+          # GraalVM version, no pattern syntax available atm
+          graalvm: '21.1.0'
+          # Java version, optional, defaults to 'java8'. Available options are 'java8' and 'java11'.
+          java: 'java11'
+          # Architecture flag, optional, defaults to 'amd64'. Available options are 'amd64' and 'aarch64'. Later is available only for linux runners.
+          arch: 'amd64'
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Statics
+        run: ./gradlew spotlessCheck --info
+        if: ${{ matrix.os != 'windows-latest' }}
+
+      - name: Test
+        run: ./gradlew test --info
+
+      - name: Build JVM stuff
+        run: ./gradlew build --info
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+
+      - name: Store distributions and libs
+        uses: actions/upload-artifact@v2
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        with:
+          name: dists-and-libs
+          retention-days: 14
+          path: |
+            build/distributions
+            build/libs
+
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Install native-image component
+        run: ${{ matrix.gu-binary }} install native-image
+
+      - name: Build native-image executable
+        run: ./gradlew nativeImage
+
+      - name: Store native-image executable
+        uses: actions/upload-artifact@v2
+        with:
+          name: executable-${{ matrix.os }}
+          retention-days: 14
+          path: build/executable

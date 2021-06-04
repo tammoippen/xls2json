@@ -10,25 +10,25 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 class LocalDateTimeSerializer(val format: String) : JsonSerializer<LocalDateTime> {
-    val formatter = DateTimeFormatter.ofPattern(format)
+  val formatter = DateTimeFormatter.ofPattern(format)
 
-    override fun serialize(
-            localDateTime: LocalDateTime,
-            srcType: Type,
-            context: JsonSerializationContext
-    ): JsonElement {
-        return JsonPrimitive(formatter.format(localDateTime))
-    }
+  override fun serialize(
+    localDateTime: LocalDateTime,
+    srcType: Type,
+    context: JsonSerializationContext
+  ): JsonElement {
+    return JsonPrimitive(formatter.format(localDateTime))
+  }
 }
 
 class LocalTimeSerializer(val format: String) : JsonSerializer<LocalTime> {
-    val formatter = DateTimeFormatter.ofPattern(format)
+  val formatter = DateTimeFormatter.ofPattern(format)
 
-    override fun serialize(
-            localTime: LocalTime,
-            srcType: Type,
-            context: JsonSerializationContext
-    ): JsonElement {
-        return JsonPrimitive(formatter.format(localTime))
-    }
+  override fun serialize(
+    localTime: LocalTime,
+    srcType: Type,
+    context: JsonSerializationContext
+  ): JsonElement {
+    return JsonPrimitive(formatter.format(localTime))
+  }
 }
