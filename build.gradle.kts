@@ -11,178 +11,158 @@ val gsonVersion = "2.8.7"
 val shadowJarConf by configurations.creating
 
 plugins {
-    // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    id("org.jetbrains.kotlin.jvm") version "1.5.10"
-    kotlin("kapt") version "1.5.10"
+  // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
+  id("org.jetbrains.kotlin.jvm") version "1.5.10"
+  kotlin("kapt") version "1.5.10"
 
-    jacoco
-    id("org.barfuin.gradle.jacocolog") version "1.2.4"
+  jacoco
+  id("org.barfuin.gradle.jacocolog") version "1.2.4"
 
-    // Apply the application plugin to add support for building a CLI application in Java.
-    application
+  // Apply the application plugin to add support for building a CLI application in Java.
+  application
 
-    id("org.mikeneck.graalvm-native-image") version "1.4.1"
-    // shadowJar / uberJar
-    id ("com.github.johnrengelman.shadow") version "7.0.0"
+  id("org.mikeneck.graalvm-native-image") version "1.4.1"
+  // shadowJar / uberJar
+  id("com.github.johnrengelman.shadow") version "7.0.0"
 
-    id("com.github.ben-manes.versions") version "0.39.0"
+  id("com.github.ben-manes.versions") version "0.39.0"
+  id("com.diffplug.spotless") version "5.12.5"
 }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 dependencies {
-    // Align versions of all Kotlin components
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+  // Align versions of all Kotlin components
+  implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
-    // Use the Kotlin JDK 8 standard library.
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+  // Use the Kotlin JDK 8 standard library.
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    // cli
-    implementation("info.picocli:picocli:$picocliVersion")
-    kapt("info.picocli:picocli-codegen:$picocliVersion")
-    // excel
-    implementation("org.apache.poi:poi:$poiVersion")
-    implementation("org.apache.poi:poi-ooxml:$poiVersion")
-    implementation("org.apache.poi:poi-ooxml-full:$poiVersion")
-    // json
-    implementation("com.google.code.gson:gson:$gsonVersion")
+  // cli
+  implementation("info.picocli:picocli:$picocliVersion")
+  kapt("info.picocli:picocli-codegen:$picocliVersion")
+  // excel
+  implementation("org.apache.poi:poi:$poiVersion")
+  implementation("org.apache.poi:poi-ooxml:$poiVersion")
+  implementation("org.apache.poi:poi-ooxml-full:$poiVersion")
+  // json
+  implementation("com.google.code.gson:gson:$gsonVersion")
 
-    // Use the Kotlin test library.
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.junit.jupiter:junit-jupiter-params")
+  // Use the Kotlin test library.
+  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+  testImplementation("org.junit.jupiter:junit-jupiter-params")
 
-    // add uberJar task outputs to uberJar configuration
-    shadowJarConf(
-        provider {
-            project.tasks.shadowJar.get().outputs.files
-        }
-    )
+  // add uberJar task outputs to uberJar configuration
+  shadowJarConf(provider { project.tasks.shadowJar.get().outputs.files })
 }
 
 application {
-    // Define the main class for the application.
-    mainClass.set("xls2json.AppKt")
-    // if you need more memory
-    // applicationDefaultJvmArgs = listOf("-Xmx4G")
+  // Define the main class for the application.
+  mainClass.set("xls2json.AppKt")
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir("$buildDir/generated/kotlin")
-        }
-    }
+sourceSets { main { java { srcDir("$buildDir/generated/kotlin") } } }
+
+configure<com.diffplug.gradle.spotless.SpotlessExtension> {
+  kotlin {
+    ktfmt()
+    // ktlint().userData(mapOf("indent_size" to "2", "continuation_indent_size" to "2"))
+  }
+  kotlinGradle {
+    target("*.gradle.kts")
+    ktfmt()
+  }
 }
 
-kapt {
-    arguments {
-        arg("project", "${project.name}")
-    }
-}
+kapt { arguments { arg("project", "${project.name}") } }
 
 tasks.register<Copy>("generateBuildInfo") {
-    val templateContext = mutableMapOf("version" to project.version)
-    // for gradle up-to-date check
-    inputs.properties(templateContext)
-    inputs.files(fileTree("src/template/kotlin"))
-    from("src/template/kotlin")
-    into("$buildDir/generated/kotlin")
-    expand(templateContext)
+  val templateContext = mutableMapOf("version" to project.version)
+  // for gradle up-to-date check
+  inputs.properties(templateContext)
+  inputs.files(fileTree("src/template/kotlin"))
+  from("src/template/kotlin")
+  into("$buildDir/generated/kotlin")
+  expand(templateContext)
 }
 
-tasks.compileKotlin {
-    dependsOn(":generateBuildInfo")
-}
+tasks.compileKotlin { dependsOn(":generateBuildInfo") }
 
-tasks.compileJava {
-    options.release.set(11)
-}
+tasks.spotlessApply { dependsOn(":generateBuildInfo") }
+
+tasks.spotlessCheck { dependsOn(":generateBuildInfo") }
+
+tasks.compileJava { options.release.set(11) }
 
 tasks.withType<Test> {
-    useJUnitPlatform()
-    this.testLogging {
-        this.showStandardStreams = true
-        this.events("passed", "skipped", "failed")
-    }
-    finalizedBy(tasks.jacocoTestReport)
+  useJUnitPlatform()
+  this.testLogging {
+    this.showStandardStreams = true
+    this.events("passed", "skipped", "failed")
+  }
+  finalizedBy(tasks.jacocoTestReport)
 }
 
-jacoco {
-    toolVersion = "0.8.7"
-}
+jacoco { toolVersion = "0.8.7" }
 
 tasks.jacocoTestReport {
-    dependsOn(tasks.test) // tests are required to run before generating the report
+  dependsOn(tasks.test) // tests are required to run before generating the report
 
-    reports {
-        xml.isEnabled = true
-        csv.isEnabled = true
-        html.isEnabled = true
-    }
-    sourceSets(sourceSets.main.get())
+  reports {
+    xml.isEnabled = true
+    csv.isEnabled = true
+    html.isEnabled = true
+  }
+  sourceSets(sourceSets.main.get())
 }
 
 distributions {
-    main {
-        contents {
-            from("./LICENSE")
-            from("./README.md")
-        }
+  main {
+    contents {
+      from("./LICENSE")
+      from("./README.md")
     }
+  }
 }
 
 nativeImage {
-    dependsOn(tasks.shadowJar)
-    runtimeClasspath = shadowJarConf
+  dependsOn(tasks.shadowJar)
+  runtimeClasspath = shadowJarConf
 
-    graalVmHome = System.getProperty("java.home")
+  graalVmHome = System.getProperty("java.home")
 
-    buildType { build ->
-        build.executable(main="xls2json.AppKt")
-    }
+  buildType { build -> build.executable(main = "xls2json.AppKt") }
 
-    mainClass = "xls2json.AppKt"
-    executableName = "xls2json"
-    outputDirectory = file("$buildDir/executable")
-    arguments(
-        "--no-fallback",  // build a standalone image or report a failure.
-        if (OperatingSystem.current().isLinux()) "--static" else "",
-        "--report-unsupported-elements-at-runtime",
-        "--verbose",
-        "--allow-incomplete-classpath",
-        "--enable-all-security-services",
-        "-H:+AddAllCharsets",
-        "-H:ConfigurationFileDirectories=native-image-config",
-        "-H:+RemoveUnusedSymbols",
-        // "-H:+PrintUniverse",
-        // "--dry-run",
-    )
+  mainClass = "xls2json.AppKt"
+  executableName = "xls2json"
+  outputDirectory = file("$buildDir/executable")
+  arguments(
+      "--no-fallback", // build a standalone image or report a failure.
+      if (OperatingSystem.current().isLinux()) "--static" else "",
+      "--report-unsupported-elements-at-runtime",
+      "--verbose",
+      "--allow-incomplete-classpath",
+      "--enable-all-security-services",
+      "-H:+AddAllCharsets",
+      "-H:ConfigurationFileDirectories=native-image-config",
+      "-H:+RemoveUnusedSymbols",
+      // "-H:+PrintUniverse",
+      // "--dry-run",
+      )
 }
 
 generateNativeImageConfig {
-    enabled = true
-    byRunningApplicationWithoutArguments()
-    byRunningApplication {
-      arguments("-h")
-    }
-    byRunningApplication {
-      arguments("--sheetnames", "src/test/resources/sample.xls")
-    }
-    byRunningApplication {
-      arguments("--sheetnames", "src/test/resources/sample.xlsx")
-    }
-    byRunningApplication {
-      arguments("src/test/resources/sample.xls")
-    }
-    byRunningApplication {
-      arguments("src/test/resources/sample.xlsx")
-    }
+  enabled = true
+  byRunningApplicationWithoutArguments()
+  byRunningApplication { arguments("-h") }
+  byRunningApplication { arguments("--sheetnames", "src/test/resources/sample.xls") }
+  byRunningApplication { arguments("--sheetnames", "src/test/resources/sample.xlsx") }
+  byRunningApplication { arguments("src/test/resources/sample.xls") }
+  byRunningApplication { arguments("src/test/resources/sample.xlsx") }
 }
 
 // Output to build/libs/shadow.jar
 tasks.shadowJar {
-    mergeServiceFiles()
-    archiveBaseName.set(project.name)
+  mergeServiceFiles()
+  archiveBaseName.set(project.name)
 }
