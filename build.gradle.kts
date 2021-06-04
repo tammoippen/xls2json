@@ -127,7 +127,7 @@ tasks.jacocoTestReport {
 
 nativeImage {
     dependsOn(tasks.shadowJar)
-    runtimeClasspath = "$buildDir/libs/${project.nam}-${project.version}-all.jar"
+    runtimeClasspath = project.configurations. shadowRuntimeElements
 
     graalVmHome = System.getProperty("java.home")
 
@@ -176,5 +176,5 @@ generateNativeImageConfig {
 // Output to build/libs/shadow.jar
 tasks.shadowJar {
     mergeServiceFiles()
-    archiveBaseName.set("xls2json")
+    archiveBaseName.set(project.name)
 }
