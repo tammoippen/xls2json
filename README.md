@@ -1,3 +1,5 @@
+[![CI](https://github.com/tammoippen/xls2json/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/tammoippen/xls2json/actions/workflows/main.yml)
+
 # xls2json
 
 Read in Excel file (.xls, .xlsx, .xlsm) and output JSON. Evaluates formulas where possible. Preserve type information from Excel via JSON types.
