@@ -2,7 +2,7 @@ package xls2json
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.util.DefaultIndenter
-import com.fasterxml.jackson.core.util.MinimalPrettyPrinter
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import java.time.LocalDateTime
@@ -30,57 +30,29 @@ class LocalTimeSerializer(val format: String) : StdSerializer<LocalTime>(LocalTi
   }
 }
 
-class PrettyPrinter : MinimalPrettyPrinter() {
-  val indenter = DefaultIndenter.SYSTEM_LINEFEED_INSTANCE
-  var nesting = 0
+class PrettyPrinter : DefaultPrettyPrinter() {
   var arrayLevel = 0
 
-  override fun writeStartObject(g: JsonGenerator) {
-    g.writeRaw('{')
-    if (!indenter.isInline()) {
-      ++nesting
-    }
+  init {
+    _arrayIndenter = DefaultIndenter.SYSTEM_LINEFEED_INSTANCE
   }
 
-  override fun beforeObjectEntries(g: JsonGenerator) {
-    indenter.writeIndentation(g, nesting)
-  }
-
-  override fun writeObjectFieldValueSeparator(g: JsonGenerator) {
-    g.writeRaw(_separators.getObjectFieldValueSeparator())
-    g.writeRaw(" ")
-  }
-
-  override fun writeObjectEntrySeparator(g: JsonGenerator) {
-    indenter.writeIndentation(g, nesting)
-  }
-
-  override fun writeEndObject(g: JsonGenerator, nrOfEntries: Int) {
-    if (!indenter.isInline()) {
-      --nesting
-    }
-    if (nrOfEntries > 0) {
-      indenter.writeIndentation(g, nesting)
-    } else {
-      g.writeRaw(" ")
-    }
-    g.writeRaw("}")
+  override fun createInstance(): PrettyPrinter {
+    val pp = PrettyPrinter()
+    pp.arrayLevel = arrayLevel
+    return pp
   }
 
   override fun writeStartArray(g: JsonGenerator) {
-    if (!indenter.isInline()) {
-      ++nesting
-    }
+    super.writeStartArray(g)
     ++arrayLevel
-
-    g.writeRaw("[")
   }
 
   override fun beforeArrayValues(g: JsonGenerator) {
     if (arrayLevel > 1) {
       g.writeRaw(" ")
     } else {
-      indenter.writeIndentation(g, nesting)
+      _arrayIndenter.writeIndentation(g, _nesting)
     }
   }
 
@@ -89,20 +61,20 @@ class PrettyPrinter : MinimalPrettyPrinter() {
     if (arrayLevel > 1) {
       g.writeRaw(" ")
     } else {
-      indenter.writeIndentation(g, nesting)
+      _arrayIndenter.writeIndentation(g, _nesting)
     }
   }
 
   override fun writeEndArray(g: JsonGenerator, nrOfValues: Int) {
-    if (!indenter.isInline()) {
-      --nesting
+    if (!_arrayIndenter.isInline()) {
+      --_nesting
     }
     if (nrOfValues > 0 && arrayLevel <= 1) {
-      indenter.writeIndentation(g, nesting)
+      _arrayIndenter.writeIndentation(g, _nesting)
     } else {
       g.writeRaw(" ")
     }
-    --arrayLevel
     g.writeRaw("]")
+    --arrayLevel
   }
 }
