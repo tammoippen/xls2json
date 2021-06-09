@@ -210,7 +210,7 @@ I am already using [Apache POI](https://poi.apache.org/) for quite some time and
 
 - [Apache POI](https://poi.apache.org/): the Java API for Microsoft Documents
 - [Picocli](https://picocli.info/): a mighty tiny command line interface
-- [gson](https://github.com/google/gson): A Java serialization/deserialization library to convert Java Objects into JSON and back
+- [jackson](https://github.com/FasterXML/jackson-databind): Jackson has been known as "the Java JSON library" or "the best JSON parser for Java". Or simply as "JSON for Java".
 - [Gradle Build Tool](https://gradle.org/)
 - [kotlin](https://kotlinlang.org/): A modern programming language that makes developers happier.
 - [GraalVM native-image](https://www.graalvm.org/reference-manual/native-image/): ahead-of-time compile Java code to a standalone executable

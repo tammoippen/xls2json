@@ -1,6 +1,8 @@
 package xls2json
 
-import com.google.gson.GsonBuilder
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.module.SimpleModule
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Model.CommandSpec
@@ -96,13 +98,15 @@ class XLS2Json : Callable<Int> {
     val out = spec.commandLine().getOut()
     val err = spec.commandLine().getErr()
 
-    val gsonBuilder = GsonBuilder()
-    gsonBuilder.registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeSerializer(dtfmt))
-    gsonBuilder.registerTypeAdapter(LocalTime::class.java, LocalTimeSerializer(tfmt))
+    val mapper = ObjectMapper()
+    val module = SimpleModule()
+    module.addSerializer(LocalDateTime::class.java, LocalDateTimeSerializer(dtfmt))
+    module.addSerializer(LocalTime::class.java, LocalTimeSerializer(tfmt))
+    mapper.registerModule(module)
+    var writer = mapper.writer()
     if (pretty) {
-      gsonBuilder.setPrettyPrinting()
+      writer = mapper.writer(DefaultPrettyPrinter())
     }
-    val gson = gsonBuilder.create()
 
     for (file in files) {
       if (showMemory) memory("next wbk", err)
@@ -116,7 +120,7 @@ class XLS2Json : Callable<Int> {
         if (showMemory) memory("wbk loaded", err)
 
         if (list_tables) {
-          out.println(gson.toJson(wbk.sheetnames()))
+          out.println(writer.writeValueAsString(wbk.sheetnames()))
 
           if (showMemory) memory("done", err)
           continue
@@ -130,7 +134,7 @@ class XLS2Json : Callable<Int> {
         val sheets = xls2json(wbk, otables, strip)
         if (showMemory) memory("sheets", err)
 
-        out.println(gson.toJson(sheets))
+        out.println(writer.writeValueAsString(sheets))
 
         if (showMemory) memory("done", err)
       } catch (e: Exception) {

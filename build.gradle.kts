@@ -6,7 +6,7 @@ version = "1.0.0"
 
 val poiVersion = "5.0.0"
 val picocliVersion = "4.6.1"
-val gsonVersion = "2.8.7"
+val jacksonVersion = "2.12.3"
 // configure outputs of shadowJar for nativeImage
 val shadowJarConf by configurations.creating
 
@@ -46,7 +46,7 @@ dependencies {
   implementation("org.apache.poi:poi-ooxml:$poiVersion")
   implementation("org.apache.poi:poi-ooxml-full:$poiVersion")
   // json
-  implementation("com.google.code.gson:gson:$gsonVersion")
+  implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
 
   // Use the Kotlin test library.
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

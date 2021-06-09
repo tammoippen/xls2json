@@ -1,34 +1,29 @@
 package xls2json
 
-import com.google.gson.JsonElement
-import com.google.gson.JsonPrimitive
-import com.google.gson.JsonSerializationContext
-import com.google.gson.JsonSerializer
-import java.lang.reflect.Type
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-class LocalDateTimeSerializer(val format: String) : JsonSerializer<LocalDateTime> {
+class LocalDateTimeSerializer(val format: String) :
+  StdSerializer<LocalDateTime>(LocalDateTime::class.java) {
   val formatter = DateTimeFormatter.ofPattern(format)
 
   override fun serialize(
     localDateTime: LocalDateTime,
-    srcType: Type,
-    context: JsonSerializationContext
-  ): JsonElement {
-    return JsonPrimitive(formatter.format(localDateTime))
+    gen: JsonGenerator,
+    arg2: SerializerProvider
+  ) {
+    gen.writeString(formatter.format(localDateTime))
   }
 }
 
-class LocalTimeSerializer(val format: String) : JsonSerializer<LocalTime> {
+class LocalTimeSerializer(val format: String) : StdSerializer<LocalTime>(LocalTime::class.java) {
   val formatter = DateTimeFormatter.ofPattern(format)
 
-  override fun serialize(
-    localTime: LocalTime,
-    srcType: Type,
-    context: JsonSerializationContext
-  ): JsonElement {
-    return JsonPrimitive(formatter.format(localTime))
+  override fun serialize(localTime: LocalTime, gen: JsonGenerator, arg2: SerializerProvider) {
+    gen.writeString(formatter.format(localTime))
   }
 }
