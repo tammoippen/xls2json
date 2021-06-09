@@ -53,44 +53,44 @@ Issues: https://github.com/tammoippen/xls2json/issues
 {"Sheet1":[["empty"],["String","hello"],["StringNumber","14.8"],["Int",1234],["bool",true],["bool",false],["float",23.12345],["datetime","2021-05-18T21:19:53.040"],["time","21:19:32.000"],["formulars"],["string","hello"],["float",-0.34678748622465627],["int",5],["datetime","2021-06-03T16:47:22.789"],["time","13:37:00.000"]]}
 
 # pretty print the output
-❯ xls2json -s --pretty src/test/resources/empty.xls
-{
-  "Sheet1": []
-}
-
-# use jq (https://stedolan.github.io/jq/)
-# or gojq (https://github.com/itchyny/gojq)
-# to get some nice output and / or to process the json
-❯ xls2json -s src/test/resources/sample.xls | jq
+❯ xls2json -s --pretty src/test/resources/sample.xls
 {
   # we have a dict sheetname -> list of rows
-  "Sheet1": [
+  "Sheet1" : [
     # each row is a list of cell-values
-    ["empty"],
-    ["String", "hello"],
-    ["StringNumber", "14.8"],
-    ["Int", 1234],
-    ["bool", true],
-    ["bool", false],
-    ["float", 23.12345],
+    [ "empty" ],
+    [ "String", "hello" ],
+    [ "StringNumber", "14.8" ],
+    [ "Int", 1234 ],
+    [ "bool", true ],
+    [ "bool", false ],
+    [ "float", 23.12345 ],
     # format for datetime and time can be specified using
     # the -D and -T options. The format-string documentation:
     # https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html
     # Please be aware, that Excel dates have no timezone attached,
     # so if you provide a format with timezone, your locally configured
-    # timezone will be used.
-    ["datetime", "2021-05-18T21:19:53.040"],
-    ["time", "21:19:32.000"],
+    [ "datetime", "2021-05-18T21:19:53.040" ],
+    [ "time", "21:19:32.000" ],
     # formulars are evaluated
-    ["formulars"],
-    ["string", "hello"],
-    ["float", -0.34678748622465627],
-    ["int", 5],
-    ["datetime", "2021-06-03T16:48:26.710"],
-    ["time", "13:37:00.000"]
+    [ "formulars" ],
+    [ "string", "hello" ],
+    [ "float", -0.34678748622465627 ],
+    [ "int", 5 ],
+    [ "datetime", "2021-06-09T21:30:44.166" ],
+    [ "time", "13:37:00.000" ]
   ]
 }
-# (format is not true to the jq-output for brevity)
+
+
+# use jq (https://stedolan.github.io/jq/)
+# or gojq (https://github.com/itchyny/gojq)
+# to get some nice output and / or to process the json
+❯ xls2json -s src/test/resources/sample.xls | jq ".Sheet1[2]"
+[
+  "StringNumber",
+  "14.8"
+]
 
 # XLSX works the same
 ❯ xls2json -s src/test/resources/sample.xlsx
@@ -106,24 +106,24 @@ Issues: https://github.com/tammoippen/xls2json/issues
 ["Sheet1","Sheet2"]
 
 # only output some table(s)
-❯ xls2json -t Sheet2 -s src/test/resources/sampleTwoSheets.xls | jq
+❯ xls2json -t Sheet2 -s --pretty src/test/resources/sampleTwoSheets.xls
 {
-  "Sheet2": [
-    ["empty"],
-    ["String", "hello"],
-    ["StringNumber", "14.8"],
-    ["Int", 1234],
-    ["bool", true],
-    ["bool", false],
-    ["float", 23.12345],
-    ["datetime", "2021-05-18T21:19:53.040"],
-    ["time", "21:19:32.000"],
-    ["formulars"],
-    ["string", "hello"],
-    ["float", -0.34678748622465627],
-    ["int", 5],
-    ["datetime", "2021-06-03T16:48:26.710"],
-    ["time", "13:37:00.000"]
+  "Sheet2" : [
+    [ "empty" ],
+    [ "String", "hello" ],
+    [ "StringNumber", "14.8" ],
+    [ "Int", 1234 ],
+    [ "bool", true ],
+    [ "bool", false ],
+    [ "float", 23.12345 ],
+    [ "datetime", "2021-05-18T21:19:53.040" ],
+    [ "time", "21:19:32.000" ],
+    [ "formulars" ],
+    [ "string", "hello" ],
+    [ "float", -0.34678748622465627 ],
+    [ "int", 5 ],
+    [ "datetime", "2021-06-09T21:37:05.615" ],
+    [ "time", "13:37:00.000" ]
   ]
 }
 
@@ -210,7 +210,7 @@ I am already using [Apache POI](https://poi.apache.org/) for quite some time and
 
 - [Apache POI](https://poi.apache.org/): the Java API for Microsoft Documents
 - [Picocli](https://picocli.info/): a mighty tiny command line interface
-- [gson](https://github.com/google/gson): A Java serialization/deserialization library to convert Java Objects into JSON and back
+- [jackson](https://github.com/FasterXML/jackson-databind): Jackson has been known as "the Java JSON library" or "the best JSON parser for Java". Or simply as "JSON for Java".
 - [Gradle Build Tool](https://gradle.org/)
 - [kotlin](https://kotlinlang.org/): A modern programming language that makes developers happier.
 - [GraalVM native-image](https://www.graalvm.org/reference-manual/native-image/): ahead-of-time compile Java code to a standalone executable

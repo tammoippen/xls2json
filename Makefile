@@ -14,11 +14,13 @@ trace:
 		src/test/resources/sample.xls \
 		src/test/resources/sampleTwoSheets.xls \
 		src/test/resources/empty.xls \
-		$(ARQ)/IfaADaten/NVx\ 2021/Daten/*/*.xls* \
-		$(ARQ)/IfaADaten/Mitte\ 2020/Daten/*/*.xls* \
-		$(ARQ)/IfaADaten/BWeit\ 2020/Daten/*/*.xls* \
-		$(ARQ)/IfaADaten/IT-Hessen\ 2019/Daten/*/*.xls* \
-		$(ARQ)/IfaADaten/NVB Mega 2013-2017/*.xls \
+		> /dev/null
+	$(JAVA_HOME)/bin/java -agentlib:native-image-agent=config-merge-dir=native-image-config \
+		-jar build/libs/xls2json-*-all.jar --pretty \
+		src/test/resources/sample.xlsx \
+		src/test/resources/sample.xls \
+		src/test/resources/sampleTwoSheets.xls \
+		src/test/resources/empty.xls \
 		> /dev/null
 
 
