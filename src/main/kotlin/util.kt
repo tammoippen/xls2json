@@ -10,13 +10,13 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 class LocalDateTimeSerializer(val format: String) :
-    StdSerializer<LocalDateTime>(LocalDateTime::class.java) {
+  StdSerializer<LocalDateTime>(LocalDateTime::class.java) {
   val formatter = DateTimeFormatter.ofPattern(format)
 
   override fun serialize(
-      localDateTime: LocalDateTime,
-      gen: JsonGenerator,
-      arg2: SerializerProvider
+    localDateTime: LocalDateTime,
+    gen: JsonGenerator,
+    arg2: SerializerProvider
   ) {
     gen.writeString(formatter.format(localDateTime))
   }
