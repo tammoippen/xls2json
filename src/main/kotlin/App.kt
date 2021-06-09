@@ -1,6 +1,7 @@
 package xls2json
 
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
+// import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
+// import com.fasterxml.jackson.core.util.DefaultIndenter
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import picocli.CommandLine
@@ -105,7 +106,10 @@ class XLS2Json : Callable<Int> {
     mapper.registerModule(module)
     var writer = mapper.writer()
     if (pretty) {
-      writer = mapper.writer(DefaultPrettyPrinter())
+      // val pp =  DefaultPrettyPrinter()
+      // pp.indentArraysWith(DefaultIndenter())
+      val pp = PrettyPrinter()
+      writer = mapper.writer(pp)
     }
 
     for (file in files) {
