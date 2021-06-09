@@ -7,7 +7,7 @@ ifneq ($(filter arm%,$(UNAME_P)),)
 endif
 
 trace:
-	# ./gradlew shadowJar
+	./gradlew shadowJar
 	$(JAVA_HOME)/bin/java -agentlib:native-image-agent=config-merge-dir=native-image-config \
 		-jar build/libs/xls2json-*-all.jar \
 		src/test/resources/sample.xlsx \
