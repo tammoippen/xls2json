@@ -3,6 +3,7 @@ package xls2json
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.util.DefaultIndenter
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
+import com.fasterxml.jackson.core.util.JsonGeneratorDelegate
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import java.time.LocalDateTime
@@ -76,5 +77,64 @@ class PrettyPrinter : DefaultPrettyPrinter() {
     }
     g.writeRaw("]")
     --arrayLevel
+  }
+}
+
+class Highlighter(val gen: JsonGenerator) : JsonGeneratorDelegate(gen) {
+  val esc = "\u001b["
+  val reset = "${esc}0m"
+  val black = "${esc}30m"
+  val red = "${esc}31m"
+  val green = "${esc}32m"
+  val yellow = "${esc}33m"
+  val blue = "${esc}34m"
+  val magenta = "${esc}35m"
+  val cyan = "${esc}36m"
+  val white = "${esc}37m"
+
+  val fieldToColor =
+    mapOf(
+      "sheetname" to yellow,
+      "string" to red,
+      "null" to magenta,
+      "boolean" to green,
+      "int" to cyan,
+      "float" to blue,
+    )
+
+  override fun writeFieldName(value: String) {
+    super.writeRaw(fieldToColor["sheetname"])
+    super.writeFieldName(value)
+    super.writeRaw(reset)
+  }
+  override fun writeString(value: String) {
+    super.writeRaw(fieldToColor["string"])
+    super.writeString(value)
+    super.writeRaw(reset)
+  }
+  override fun writeNull() {
+    super.writeRaw(fieldToColor["null"])
+    super.writeNull()
+    super.writeRaw(reset)
+  }
+  override fun writeBoolean(value: Boolean) {
+    super.writeRaw(fieldToColor["boolean"])
+    super.writeBoolean(value)
+    super.writeRaw(reset)
+  }
+  override fun writeNumber(value: Long) {
+    super.writeRaw(fieldToColor["int"])
+    super.writeNumber(value)
+    super.writeRaw(reset)
+  }
+  override fun writeNumber(value: Double) {
+    super.writeRaw(fieldToColor["float"])
+    super.writeNumber(value)
+    super.writeRaw(reset)
+  }
+  override fun writeNumber(value: Float) {
+    super.writeRaw(fieldToColor["float"])
+    super.writeNumber(value)
+    super.writeRaw(reset)
   }
 }

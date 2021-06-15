@@ -1,5 +1,6 @@
 package xls2json
 
+import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import picocli.CommandLine
@@ -57,6 +58,9 @@ class XLS2Json : Callable<Int> {
   @Option(names = ["--pretty"], description = ["Pretty print the JSON."], order = 1)
   var pretty = false
 
+  @Option(names = ["--color"], description = ["Add some color to the JSON."], order = 1)
+  var color = false
+
   @Option(names = ["-l", "--list-tables"], description = ["List all tables."], order = 2)
   var list_tables = false
 
@@ -102,12 +106,14 @@ class XLS2Json : Callable<Int> {
     module.addSerializer(LocalDateTime::class.java, LocalDateTimeSerializer(dtfmt))
     module.addSerializer(LocalTime::class.java, LocalTimeSerializer(tfmt))
     mapper.registerModule(module)
-    var writer = mapper.writer()
+
+    var generator: JsonGenerator = mapper.createGenerator(out)
+    if (color) {
+      generator = Highlighter(generator)
+    }
+
     if (pretty) {
-      // val pp =  DefaultPrettyPrinter()
-      // pp.indentArraysWith(DefaultIndenter())
-      val pp = PrettyPrinter()
-      writer = mapper.writer(pp)
+      generator.setPrettyPrinter(PrettyPrinter())
     }
 
     for (file in files) {
@@ -122,7 +128,7 @@ class XLS2Json : Callable<Int> {
         if (showMemory) memory("wbk loaded", err)
 
         if (list_tables) {
-          out.println(writer.writeValueAsString(wbk.sheetnames()))
+          mapper.writeValue(generator, wbk.sheetnames())
 
           if (showMemory) memory("done", err)
           continue
@@ -136,7 +142,7 @@ class XLS2Json : Callable<Int> {
         val sheets = xls2json(wbk, otables, strip)
         if (showMemory) memory("sheets", err)
 
-        out.println(writer.writeValueAsString(sheets))
+        mapper.writeValue(generator, sheets)
 
         if (showMemory) memory("done", err)
       } catch (e: Exception) {
