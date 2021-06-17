@@ -140,6 +140,7 @@ class XLS2Json(val istty: Boolean = false) : Callable<Int> {
 
         if (list_tables) {
           mapper.writeValue(generator, wbk.sheetnames())
+          out.println()
 
           if (showMemory) memory("done", err)
           continue
@@ -154,6 +155,7 @@ class XLS2Json(val istty: Boolean = false) : Callable<Int> {
         if (showMemory) memory("sheets", err)
 
         mapper.writeValue(generator, sheets)
+        out.println()
 
         if (showMemory) memory("done", err)
       } catch (e: Exception) {

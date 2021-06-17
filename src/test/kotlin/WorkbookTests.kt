@@ -70,7 +70,7 @@ class WorkbookTest {
     assertEquals("14.8", wst[row, 1])
     ++row
     assertEquals("Int", wst[row, 0])
-    assertEquals(1234, wst[row, 1])
+    assertEquals(1234L, wst[row, 1])
     ++row
     assertEquals("bool", wst[row, 0])
     assertEquals(true, wst[row, 1])
@@ -97,7 +97,7 @@ class WorkbookTest {
     assertEquals(-0.34678748622465627, wst[row, 1])
     ++row
     assertEquals("int", wst[row, 0])
-    assertEquals(5, wst[row, 1])
+    assertEquals(5L, wst[row, 1])
     ++row
     assertEquals("datetime", wst[row, 0])
     // now()
