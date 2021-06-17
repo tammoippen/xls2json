@@ -58,7 +58,12 @@ class XLS2Json(val istty: Boolean = false) : Callable<Int> {
   @Option(names = ["--pretty"], description = ["Pretty print the JSON."], order = 1)
   var pretty = false
 
-  @Option(names = ["--color"], negatable = true, description = ["Force adding or removing of ansi-color to pretty-printed JSON."], order = 1)
+  @Option(
+    names = ["--color"],
+    negatable = true,
+    description = ["Force adding or removing of ansi-color to pretty-printed JSON."],
+    order = 1
+  )
   var color: Boolean? = null
 
   @Option(names = ["-l", "--list-tables"], description = ["List all tables."], order = 2)
