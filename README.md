@@ -8,7 +8,8 @@ Read in Excel file (.xls, .xlsx, .xlsm) and output JSON. Evaluates formulas wher
 ❯ xls2json --help
 Open an xls(x|m) file and transform to json.
 
-Usage: xls2json [-hlmsvV] [-D=<dtfmt>] [-T=<tfmt>] [-t=<tables>]... [<files>...]
+Usage: xls2json [-hlmsvV] [--[no-]color] [--pretty] [-D=<dtfmt>]
+                [-p=<password>] [-T=<tfmt>] [-t=<tables>]... [<files>...]
 
   If no `--table`s are provided, then all
   tables will be extracted.
@@ -22,6 +23,8 @@ Usage: xls2json [-hlmsvV] [-D=<dtfmt>] [-T=<tfmt>] [-t=<tables>]... [<files>...]
   -m, --memory               Show memory usage information.
   -v, --verbose              Show more information.
       --pretty               Pretty print the JSON.
+      --[no-]color           Force adding or removing of ansi-color to
+                               pretty-printed JSON.
   -l, --list-tables          List all tables.
   -t, --table=<tables>       Specify the tables to transform
   -p, --password=<password>  Password for opening the input file(s).
@@ -41,7 +44,7 @@ Issues: https://github.com/tammoippen/xls2json/issues
 
 ```sh
 # read a XLS file
-❯ ./dist/xls2json-amd64 src/test/resources/empty.xls
+❯ xls2json src/test/resources/empty.xls
 {"Sheet1":[]}
 
 # read a XLS file with content
