@@ -96,6 +96,8 @@ tasks.register<Copy>("generateBuildInfo") {
 
 tasks.compileKotlin { dependsOn(":generateBuildInfo") }
 
+tasks.named("spotlessKotlin") { dependsOn(":generateBuildInfo") }
+
 tasks.spotlessApply { dependsOn(":generateBuildInfo") }
 
 tasks.spotlessCheck { dependsOn(":generateBuildInfo") }
