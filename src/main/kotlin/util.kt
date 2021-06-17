@@ -57,6 +57,9 @@ class PrettyPrinter : DefaultPrettyPrinter() {
       _arrayIndenter.writeIndentation(g, _nesting)
     }
     if (escape != null) {
+      // When writing the first value of an array, the
+      // (WriterBased)JsonGenerator will first call this
+      // method. Hence we need to add the color code.
       g.writeRaw(escape)
     }
   }
@@ -69,6 +72,9 @@ class PrettyPrinter : DefaultPrettyPrinter() {
       _arrayIndenter.writeIndentation(g, _nesting)
     }
     if (escape != null) {
+      // When writing the subsequent value of an array, the
+      // (WriterBased)JsonGenerator will first call this
+      // method. Hence we need to add the color code.
       g.writeRaw(escape)
     }
   }
