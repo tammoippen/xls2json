@@ -58,8 +58,8 @@ class XLS2Json(val istty: Boolean = false) : Callable<Int> {
   @Option(names = ["--pretty"], description = ["Pretty print the JSON."], order = 1)
   var pretty = false
 
-  @Option(names = ["--no-color"], description = ["Do not add color to pretty-printed JSON."], order = 1)
-  var no_color = false
+  @Option(names = ["--color"], negatable = true, description = ["Force adding or removing of ansi-color to pretty-printed JSON."], order = 1)
+  var color: Boolean? = null
 
   @Option(names = ["-l", "--list-tables"], description = ["List all tables."], order = 2)
   var list_tables = false
@@ -111,8 +111,11 @@ class XLS2Json(val istty: Boolean = false) : Callable<Int> {
 
     if (pretty) {
       val nocolor = System.getenv("NO_COLOR")
-      val usecolor = nocolor == null && istty && !no_color
-
+      var usecolor = nocolor == null && istty
+      // flag for forcing (no) color (default null)
+      if (color != null) {
+        usecolor = color as Boolean
+      }
       if (usecolor) {
         generator = Highlighter(generator)
       }
