@@ -33,6 +33,7 @@ class LocalTimeSerializer(val format: String) : StdSerializer<LocalTime>(LocalTi
 
 class PrettyPrinter : DefaultPrettyPrinter() {
   var arrayLevel = 0
+  var escape: String? = null
 
   init {
     _arrayIndenter = DefaultIndenter.SYSTEM_LINEFEED_INSTANCE
@@ -55,6 +56,9 @@ class PrettyPrinter : DefaultPrettyPrinter() {
     } else {
       _arrayIndenter.writeIndentation(g, _nesting)
     }
+    if (escape != null) {
+      g.writeRaw(escape)
+    }
   }
 
   override fun writeArrayValueSeparator(g: JsonGenerator) {
@@ -63,6 +67,9 @@ class PrettyPrinter : DefaultPrettyPrinter() {
       g.writeRaw(" ")
     } else {
       _arrayIndenter.writeIndentation(g, _nesting)
+    }
+    if (escape != null) {
+      g.writeRaw(escape)
     }
   }
 
@@ -102,39 +109,59 @@ class Highlighter(val gen: JsonGenerator) : JsonGeneratorDelegate(gen) {
       "float" to blue,
     )
 
+  fun setEscape(escapeName: String) {
+    val pp = gen.prettyPrinter
+    if (pp != null && pp is PrettyPrinter) {
+      pp.escape = fieldToColor[escapeName]
+    }
+  }
+
+  fun unsetEscape() {
+    val pp = gen.prettyPrinter
+    if (pp != null && pp is PrettyPrinter) {
+      pp.escape = null
+    }
+  }
+
   override fun writeFieldName(value: String) {
     super.writeRaw(fieldToColor["sheetname"])
     super.writeFieldName(value)
     super.writeRaw(reset)
   }
   override fun writeString(value: String) {
-    super.writeRaw(fieldToColor["string"])
+    setEscape("string")
     super.writeString(value)
+    unsetEscape()
     super.writeRaw(reset)
   }
   override fun writeNull() {
-    super.writeRaw(fieldToColor["null"])
+    setEscape("null")
     super.writeNull()
+    unsetEscape()
     super.writeRaw(reset)
   }
   override fun writeBoolean(value: Boolean) {
-    super.writeRaw(fieldToColor["boolean"])
+    setEscape("boolean")
     super.writeBoolean(value)
+    unsetEscape()
     super.writeRaw(reset)
   }
   override fun writeNumber(value: Long) {
-    super.writeRaw(fieldToColor["int"])
+    setEscape("int")
     super.writeNumber(value)
+    unsetEscape()
     super.writeRaw(reset)
   }
   override fun writeNumber(value: Double) {
-    super.writeRaw(fieldToColor["float"])
+    setEscape("float")
     super.writeNumber(value)
+    unsetEscape()
     super.writeRaw(reset)
   }
   override fun writeNumber(value: Float) {
-    super.writeRaw(fieldToColor["float"])
+    setEscape("float")
     super.writeNumber(value)
+    unsetEscape()
     super.writeRaw(reset)
   }
 }

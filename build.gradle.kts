@@ -11,6 +11,7 @@ val jacksonVersion = "2.12.3"
 val shadowJarConf by configurations.creating
 
 plugins {
+  idea
   // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
   id("org.jetbrains.kotlin.jvm") version "1.5.10"
   kotlin("kapt") version "1.5.10"
@@ -54,6 +55,13 @@ dependencies {
 
   // add uberJar task outputs to uberJar configuration
   shadowJarConf(provider { project.tasks.shadowJar.get().outputs.files })
+}
+
+idea {
+  module {
+    isDownloadJavadoc = true
+    isDownloadSources = true
+  }
 }
 
 application {

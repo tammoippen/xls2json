@@ -46,7 +46,7 @@ fun memory(event: String, err: PrintWriter) {
   ],
   sortOptions = false
 )
-class XLS2Json : Callable<Int> {
+class XLS2Json(val istty: Boolean = false) : Callable<Int> {
   @Spec lateinit var spec: CommandSpec
 
   @Option(names = ["-m", "--memory"], description = ["Show memory usage information."], order = 1)
@@ -58,8 +58,8 @@ class XLS2Json : Callable<Int> {
   @Option(names = ["--pretty"], description = ["Pretty print the JSON."], order = 1)
   var pretty = false
 
-  @Option(names = ["--color"], description = ["Add some color to the JSON."], order = 1)
-  var color = false
+  @Option(names = ["--no-color"], description = ["Do not add color to pretty-printed JSON."], order = 1)
+  var no_color = false
 
   @Option(names = ["-l", "--list-tables"], description = ["List all tables."], order = 2)
   var list_tables = false
@@ -108,11 +108,14 @@ class XLS2Json : Callable<Int> {
     mapper.registerModule(module)
 
     var generator: JsonGenerator = mapper.createGenerator(out)
-    if (color) {
-      generator = Highlighter(generator)
-    }
 
     if (pretty) {
+      val nocolor = System.getenv("NO_COLOR")
+      val usecolor = nocolor == null && istty && !no_color
+
+      if (usecolor) {
+        generator = Highlighter(generator)
+      }
       generator.setPrettyPrinter(PrettyPrinter())
     }
 
@@ -161,6 +164,7 @@ fun main(args: Array<String>) {
   // e.g. -Xmx14g for max heap size of 14 GB
   val filteredArgs =
     args.filter { e -> !(e.startsWith("-XX:") || e.startsWith("-Xm") || e.startsWith("-H:")) }
-  val cmd = CommandLine(XLS2Json())
+  val istty = System.console() != null
+  val cmd = CommandLine(XLS2Json(istty))
   exitProcess(cmd.execute(*filteredArgs.toTypedArray()))
 }
