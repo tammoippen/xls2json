@@ -2,15 +2,20 @@ package xls2json
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import picocli.CommandLine
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class CLITest {
 
@@ -18,6 +23,8 @@ class CLITest {
   val app: XLS2Json = XLS2Json()
   val cmd: CommandLine = CommandLine(app)
   var sw: StringWriter? = null
+  var swErr: StringWriter? = null
+  val cwd = Paths.get("").toAbsolutePath().toString()
   val ls = System.lineSeparator()
   val datefmt = "yyyy-MM-dd'T'HH"
   var now = LocalDateTime.now().format(DateTimeFormatter.ofPattern(datefmt))
@@ -25,8 +32,60 @@ class CLITest {
   @BeforeEach
   fun init() {
     sw = StringWriter()
+    swErr = StringWriter()
     cmd.setOut(PrintWriter(sw))
+    cmd.setErr(PrintWriter(swErr))
     now = LocalDateTime.now().format(DateTimeFormatter.ofPattern(datefmt))
+  }
+
+  @Test
+  fun `file not found`() {
+    val file = File("xxx.xls")
+
+    val exitCode = cmd.execute(file.absolutePath)
+    assertEquals(1, exitCode)
+    assertEquals("", sw.toString())
+    val errStr = swErr.toString()
+    assertTrue(errStr.startsWith("Error: java.io.FileNotFoundException"))
+    assertTrue(errStr.endsWith("xxx.xls$ls"))
+  }
+
+  @Test
+  fun `file not found with stack trace`() {
+    val file = File("xxx.xls")
+
+    val exitCode = cmd.execute("--verbose", file.absolutePath)
+    assertEquals(1, exitCode)
+    assertEquals("", sw.toString())
+    val errStr = swErr.toString().split(ls)
+    assertEquals("Transforming `$cwd/xxx.xls` ...", errStr[0])
+    assertTrue(errStr[1].startsWith("java.io.FileNotFoundException"))
+    assertTrue(errStr[1].endsWith("xxx.xls"))
+    assertTrue(
+      "at org.apache.poi.ss.usermodel.WorkbookFactory.create(WorkbookFactory.java:" in errStr[2]
+    )
+    assertTrue(errStr.size > 3)
+  }
+
+  @Test
+  fun `empty file`(@TempDir tempDir: Path) {
+    val file = Files.createFile(tempDir.resolve("xxx.xls"))
+
+    val exitCode = cmd.execute(file.toFile().absolutePath)
+    assertEquals(1, exitCode)
+    assertEquals("", sw.toString())
+    val errStr = swErr.toString()
+    assertTrue(errStr.startsWith("Error: org.apache.poi.EmptyFileException: The supplied file "))
+    assertTrue(errStr.endsWith("xxx.xls' was empty (zero bytes long)$ls"))
+  }
+
+  @Test
+  fun `no such sheet`() {
+    val file = File(classloader.getResource("sample.xls").getFile())
+
+    val exitCode = cmd.execute("--table=xxx", file.absolutePath)
+    assertEquals(0, exitCode)
+    assertEquals("{\"xxx\":null}$ls", sw.toString())
   }
 
   @ParameterizedTest
@@ -62,6 +121,7 @@ class CLITest {
     val exitCode = cmd.execute(file.absolutePath)
     assertEquals(0, exitCode)
     assertEquals("{\"Sheet1\":[]}$ls", sw.toString())
+    assertEquals("", swErr.toString())
   }
 
   @Test
@@ -80,6 +140,32 @@ class CLITest {
     val exitCode = cmd.execute("--pretty", "--color", file.absolutePath)
     assertEquals(0, exitCode)
     assertEquals("{\u001b[33m$ls  \"Sheet1\"\u001b[0m : [ ]$ls}$ls", sw.toString())
+  }
+
+  @Test
+  fun `verbose output`() {
+    val file = File(classloader.getResource("empty.xls").getFile())
+
+    val exitCode = cmd.execute("--verbose", file.absolutePath)
+    assertEquals(0, exitCode)
+    assertEquals("{\"Sheet1\":[]}$ls", sw.toString())
+    assertEquals("Transforming `$cwd/build/resources/test/empty.xls` ...$ls", swErr.toString())
+  }
+
+  @Test
+  fun `memory output`() {
+    val file = File(classloader.getResource("empty.xls").getFile())
+
+    val exitCode = cmd.execute("--memory", file.absolutePath)
+    assertEquals(0, exitCode)
+    assertEquals("{\"Sheet1\":[]}$ls", sw.toString())
+    val errStrs = swErr.toString().split(ls)
+    assertEquals(5, errStrs.size)
+    assertTrue(errStrs[0].startsWith("Memory next wbk"))
+    assertTrue(errStrs[1].startsWith("Memory wbk loaded:"))
+    assertTrue(errStrs[2].startsWith("Memory sheets"))
+    assertTrue(errStrs[3].startsWith("Memory done"))
+    assertEquals("", errStrs[4])
   }
 
   @ParameterizedTest

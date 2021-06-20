@@ -19,6 +19,7 @@ fun xls2json(wbk: Workbook, tables: List<String>, strip: Boolean): Map<String, A
   for (table in tables) {
     if (table !in sheetnames) {
       result[table] = null
+      continue
     }
     val wst = wbk[table]
 
