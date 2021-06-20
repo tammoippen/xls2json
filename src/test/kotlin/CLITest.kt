@@ -26,6 +26,7 @@ class CLITest {
   var swErr: StringWriter? = null
   val cwd = Paths.get("").toAbsolutePath().toString()
   val ls = System.lineSeparator()
+  val fs = File.separator
   val datefmt = "yyyy-MM-dd'T'HH"
   var now = LocalDateTime.now().format(DateTimeFormatter.ofPattern(datefmt))
 
@@ -58,7 +59,7 @@ class CLITest {
     assertEquals(1, exitCode)
     assertEquals("", sw.toString())
     val errStr = swErr.toString().split(ls)
-    assertEquals("Transforming `$cwd/xxx.xls` ...", errStr[0])
+    assertEquals("Transforming `$cwd${fs}xxx.xls` ...", errStr[0])
     assertTrue(errStr[1].startsWith("java.io.FileNotFoundException"))
     assertTrue(errStr[1].endsWith("xxx.xls"))
     assertTrue(
@@ -149,7 +150,10 @@ class CLITest {
     val exitCode = cmd.execute("--verbose", file.absolutePath)
     assertEquals(0, exitCode)
     assertEquals("{\"Sheet1\":[]}$ls", sw.toString())
-    assertEquals("Transforming `$cwd/build/resources/test/empty.xls` ...$ls", swErr.toString())
+    assertEquals(
+      "Transforming `$cwd${fs}build${fs}resources${fs}test${fs}empty.xls` ...$ls",
+      swErr.toString()
+    )
   }
 
   @Test
