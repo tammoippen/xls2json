@@ -5,10 +5,10 @@ import kotlin.test.assertEquals
 
 @Test
 fun `rstrip of an empty list returns an empty list`() {
-  assertEquals(listOf<Any?>(), rstrip(listOf<Any?>()))
+  assertEquals(listOf<Any?>(), rstrip(listOf<Any?>(), null))
 }
 
 @Test
 fun `rstrip of an list of only null returns an empty list`() {
-  assertEquals(listOf<Any?>(), rstrip(listOf<Any?>(null, null)))
+  assertEquals(listOf<Any?>(), rstrip(listOf<Any?>(null, null), null))
 }
