@@ -10,15 +10,6 @@ val jacksonVersion = "2.12.3"
 // configure outputs of shadowJar for nativeImage
 val shadowJarConf by configurations.creating
 
-val isCiServer = System.getenv().containsKey("CI")
-
-// Cache build artifacts, so expensive operations do not need to be re-computed
-buildCache {
-   local {
-       isEnabled = !isCiServer
-   }
-}
-
 plugins {
   idea
   // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
