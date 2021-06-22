@@ -77,8 +77,8 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
 
       - name: Install native-image component
-        if: startsWith(github.ref, 'refs/tags/')
-        run: ${{ matrix.gu-binary }} install native-image
+        # if: startsWith(github.ref, 'refs/tags/')
+        run: gu install native-image
 
       - name: Build native-image executable
         if: startsWith(github.ref, 'refs/tags/')
