@@ -50,6 +50,16 @@ jobs:
           arguments: spotlessCheck build jacocoTestReport
           gradle-distribution-sha-256-sum-warning: false
 
+      - uses: codecov/codecov-action@v1
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+          files: ./build/reports/jacoco/test/jacocoTestReport.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+          verbose: true
+
       - name: Store distributions and libs
         uses: actions/upload-artifact@v2
         if: matrix.os == 'ubuntu-latest'
