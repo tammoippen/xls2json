@@ -1,6 +1,6 @@
 package xls2json
 
-fun rstrip(l: List<Any?>, value: Any? = null): List<Any?> {
+fun rstrip(l: List<Any?>, value: Any?): List<Any?> {
   var lastValue = l.size - 1
   val itr = l.listIterator(l.size)
   while (itr.hasPrevious()) {
@@ -19,6 +19,7 @@ fun xls2json(wbk: Workbook, tables: List<String>, strip: Boolean): Map<String, A
   for (table in tables) {
     if (table !in sheetnames) {
       result[table] = null
+      continue
     }
     val wst = wbk[table]
 

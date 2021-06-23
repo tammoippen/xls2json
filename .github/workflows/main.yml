@@ -8,6 +8,7 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
+    tags: [ "v*" ]
   pull_request:
     branches: [ main ]
 
@@ -41,20 +42,32 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Statics
-        run: ./gradlew spotlessCheck --info
-        if: ${{ matrix.os != 'windows-latest' }}
+      - uses: burrunan/gradle-cache-action@v1
+        name: Build xls2json
+        with:
+          # RUNNER_OS is added to job-id automatically
+          job-id: jdk11
+          arguments: spotlessCheck build jacocoTestReport
+          gradle-distribution-sha-256-sum-warning: false
 
-      - name: Test
-        run: ./gradlew test --info
+      - uses: codecov/codecov-action@v1
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./build/reports/jacoco/test/jacocoTestReport.xml
+          flags: unittests
 
-      - name: Build JVM stuff
-        run: ./gradlew build --info
-        if: ${{ matrix.os == 'ubuntu-latest' }}
+      - name: Store Reports
+        uses: actions/upload-artifact@v2
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          name: reports
+          retention-days: 14
+          path: build/reports
 
       - name: Store distributions and libs
         uses: actions/upload-artifact@v2
-        if: ${{ matrix.os == 'ubuntu-latest' }}
+        if: matrix.os == 'ubuntu-latest'
         with:
           name: dists-and-libs
           retention-days: 14
@@ -62,16 +75,50 @@ jobs:
             build/distributions
             build/libs
 
+      - name: Upload JVM parts to release
+        if: startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest'
+        run: |
+          export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+          version=$(echo -n ${{github.ref}} | cut -c12-)
+          tag=$(echo -n ${{github.ref}} | cut -c11-)
+          gh release upload $tag build/libs/xls2json-$version-all.jar \
+                                 build/distributions/xls2json-$version.tar \
+                                 build/distributions/xls2json-$version.zip
+
+      # only build native image when releasing a tag
       - uses: ilammy/msvc-dev-cmd@v1
+        if: startsWith(github.ref, 'refs/tags/')
+
       - name: Install native-image component
+        if: startsWith(github.ref, 'refs/tags/')
         run: ${{ matrix.gu-binary }} install native-image
 
       - name: Build native-image executable
+        if: startsWith(github.ref, 'refs/tags/')
         run: ./gradlew nativeImage
 
       - name: Store native-image executable
+        if: startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@v2
         with:
           name: executable-${{ matrix.os }}
           retention-days: 14
           path: build/executable
+
+      - name: Upload native parts to release (unix)
+        if: startsWith(github.ref, 'refs/tags/') && matrix.os != 'windows-latest'
+        run: |
+          export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+          version=$(echo -n ${{github.ref}} | cut -c12-)
+          tag=$(echo -n ${{github.ref}} | cut -c11-)
+          cp build/executable/xls2json xls2json-${{runner.os}}-amd64-$version
+          gh release upload $tag xls2json-${{runner.os}}-amd64-$version
+
+      - name: Upload native parts to release (windows)
+        if: startsWith(github.ref, 'refs/tags/') && matrix.os == 'windows-latest'
+        run: |
+          $env:GITHUB_TOKEN = '${{ secrets.GITHUB_TOKEN }}'
+          $version='${{github.ref}}'.substring(11)
+          $tag='${{github.ref}}'.substring(10)
+          Compress-Archive -Path build/executable/ -DestinationPath xls2json-${{runner.os}}-amd64-$version.zip
+          gh release upload $tag xls2json-${{runner.os}}-amd64-$version.zip

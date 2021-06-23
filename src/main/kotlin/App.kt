@@ -1,5 +1,6 @@
 package xls2json
 
+import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import picocli.CommandLine
@@ -45,7 +46,7 @@ fun memory(event: String, err: PrintWriter) {
   ],
   sortOptions = false
 )
-class XLS2Json : Callable<Int> {
+class XLS2Json(val istty: Boolean = false) : Callable<Int> {
   @Spec lateinit var spec: CommandSpec
 
   @Option(names = ["-m", "--memory"], description = ["Show memory usage information."], order = 1)
@@ -56,6 +57,14 @@ class XLS2Json : Callable<Int> {
 
   @Option(names = ["--pretty"], description = ["Pretty print the JSON."], order = 1)
   var pretty = false
+
+  @Option(
+    names = ["--color"],
+    negatable = true,
+    description = ["Force adding or removing of ansi-color to pretty-printed JSON."],
+    order = 1
+  )
+  var color: Boolean? = null
 
   @Option(names = ["-l", "--list-tables"], description = ["List all tables."], order = 2)
   var list_tables = false
@@ -102,12 +111,20 @@ class XLS2Json : Callable<Int> {
     module.addSerializer(LocalDateTime::class.java, LocalDateTimeSerializer(dtfmt))
     module.addSerializer(LocalTime::class.java, LocalTimeSerializer(tfmt))
     mapper.registerModule(module)
-    var writer = mapper.writer()
+
+    var generator: JsonGenerator = mapper.createGenerator(out)
+
     if (pretty) {
-      // val pp =  DefaultPrettyPrinter()
-      // pp.indentArraysWith(DefaultIndenter())
-      val pp = PrettyPrinter()
-      writer = mapper.writer(pp)
+      val nocolor = System.getenv("NO_COLOR")
+      var usecolor = nocolor == null && istty
+      // flag for forcing (no) color (default null)
+      if (color != null) {
+        usecolor = color as Boolean
+      }
+      if (usecolor) {
+        generator = Highlighter(generator)
+      }
+      generator.setPrettyPrinter(PrettyPrinter())
     }
 
     for (file in files) {
@@ -122,7 +139,8 @@ class XLS2Json : Callable<Int> {
         if (showMemory) memory("wbk loaded", err)
 
         if (list_tables) {
-          out.println(writer.writeValueAsString(wbk.sheetnames()))
+          mapper.writeValue(generator, wbk.sheetnames())
+          out.println()
 
           if (showMemory) memory("done", err)
           continue
@@ -136,7 +154,8 @@ class XLS2Json : Callable<Int> {
         val sheets = xls2json(wbk, otables, strip)
         if (showMemory) memory("sheets", err)
 
-        out.println(writer.writeValueAsString(sheets))
+        mapper.writeValue(generator, sheets)
+        out.println()
 
         if (showMemory) memory("done", err)
       } catch (e: Exception) {
@@ -155,6 +174,7 @@ fun main(args: Array<String>) {
   // e.g. -Xmx14g for max heap size of 14 GB
   val filteredArgs =
     args.filter { e -> !(e.startsWith("-XX:") || e.startsWith("-Xm") || e.startsWith("-H:")) }
-  val cmd = CommandLine(XLS2Json())
+  val istty = System.console() != null
+  val cmd = CommandLine(XLS2Json(istty))
   exitProcess(cmd.execute(*filteredArgs.toTypedArray()))
 }

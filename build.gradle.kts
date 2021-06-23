@@ -2,7 +2,7 @@ import org.gradle.internal.os.OperatingSystem
 
 println(OperatingSystem.current())
 
-version = "1.1.0"
+version = "1.2.0"
 
 val poiVersion = "5.0.0"
 val picocliVersion = "4.6.1"
@@ -11,6 +11,7 @@ val jacksonVersion = "2.12.3"
 val shadowJarConf by configurations.creating
 
 plugins {
+  idea
   // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
   id("org.jetbrains.kotlin.jvm") version "1.5.10"
   kotlin("kapt") version "1.5.10"
@@ -26,7 +27,7 @@ plugins {
   id("com.github.johnrengelman.shadow") version "7.0.0"
 
   id("com.github.ben-manes.versions") version "0.39.0"
-  id("com.diffplug.spotless") version "5.12.5"
+  id("com.diffplug.spotless") version "5.14.0"
 }
 
 repositories { mavenCentral() }
@@ -54,6 +55,13 @@ dependencies {
 
   // add uberJar task outputs to uberJar configuration
   shadowJarConf(provider { project.tasks.shadowJar.get().outputs.files })
+}
+
+idea {
+  module {
+    isDownloadJavadoc = true
+    isDownloadSources = true
+  }
 }
 
 application {
@@ -87,6 +95,8 @@ tasks.register<Copy>("generateBuildInfo") {
 }
 
 tasks.compileKotlin { dependsOn(":generateBuildInfo") }
+
+tasks.named("spotlessKotlin") { dependsOn(":generateBuildInfo") }
 
 tasks.spotlessApply { dependsOn(":generateBuildInfo") }
 

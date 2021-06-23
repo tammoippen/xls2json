@@ -21,7 +21,7 @@ class Worksheet(val wst: Sheet, val evaluator: FormulaEvaluator) {
       }
     } else {
       if (Math.floor(numVal) == numVal) {
-        return numVal.toInt()
+        return numVal.toLong()
       }
       return numVal
     }
