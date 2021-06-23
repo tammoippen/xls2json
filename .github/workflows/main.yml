@@ -47,7 +47,7 @@ jobs:
         with:
           # RUNNER_OS is added to job-id automatically
           job-id: jdk11
-          arguments: spotlessCheck build jacocoReport
+          arguments: spotlessCheck build jacocoTestReport
           gradle-distribution-sha-256-sum-warning: false
 
       - name: Store distributions and libs
