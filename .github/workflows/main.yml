@@ -108,5 +108,5 @@ jobs:
           $env:GITHUB_TOKEN = '${{ secrets.GITHUB_TOKEN }}'
           $version='${{github.ref}}'.substring(11)
           $tag='${{github.ref}}'.substring(10)
-          Compress-Archive -Path build/executable/ -DestinationPath xls2json-${{runner.os}}-amd64-$version
+          Compress-Archive -Path build/executable/ -DestinationPath xls2json-${{runner.os}}-amd64-$version.zip
           gh release upload $tag xls2json-${{runner.os}}-amd64-$version.zip
