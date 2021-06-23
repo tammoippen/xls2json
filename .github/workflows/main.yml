@@ -57,6 +57,14 @@ jobs:
           files: ./build/reports/jacoco/test/jacocoTestReport.xml
           flags: unittests
 
+      - name: Store Reports
+        uses: actions/upload-artifact@v2
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          name: reports
+          retention-days: 14
+          path: build/reports
+
       - name: Store distributions and libs
         uses: actions/upload-artifact@v2
         if: matrix.os == 'ubuntu-latest'
