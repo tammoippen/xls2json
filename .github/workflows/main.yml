@@ -47,14 +47,8 @@ jobs:
         with:
           # RUNNER_OS is added to job-id automatically
           job-id: jdk11
-          arguments: build -x test --info
-
-      - name: Statics
-        run: ./gradlew spotlessCheck --info
-        if: matrix.os != 'windows-latest'
-
-      - name: Test
-        run: ./gradlew test --info
+          arguments: spotlessCheck build jacocoReport
+          gradle-distribution-sha-256-sum-warning: false
 
       - name: Store distributions and libs
         uses: actions/upload-artifact@v2
