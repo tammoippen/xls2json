@@ -1,4 +1,5 @@
 [![CI](https://github.com/tammoippen/xls2json/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/tammoippen/xls2json/actions/workflows/main.yml)
+[![codecov](https://codecov.io/gh/tammoippen/xls2json/branch/main/graph/badge.svg?token=EZWMZAM1AQ)](https://codecov.io/gh/tammoippen/xls2json)
 
 # xls2json
 
