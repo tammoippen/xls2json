@@ -6,18 +6,18 @@ version = "1.2.0"
 
 val poiVersion = "5.0.0"
 val picocliVersion = "4.6.1"
-val jacksonVersion = "2.12.3"
+val jacksonVersion = "2.12.4"
 // configure outputs of shadowJar for nativeImage
 val shadowJarConf by configurations.creating
 
 plugins {
   idea
   // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-  id("org.jetbrains.kotlin.jvm") version "1.5.10"
-  kotlin("kapt") version "1.5.10"
+  id("org.jetbrains.kotlin.jvm") version "1.5.20"
+  kotlin("kapt") version "1.5.20"
 
   jacoco
-  id("org.barfuin.gradle.jacocolog") version "1.2.4"
+  id("org.barfuin.gradle.jacocolog") version "2.0.0"
 
   // Apply the application plugin to add support for building a CLI application in Java.
   application
@@ -27,7 +27,7 @@ plugins {
   id("com.github.johnrengelman.shadow") version "7.0.0"
 
   id("com.github.ben-manes.versions") version "0.39.0"
-  id("com.diffplug.spotless") version "5.14.0"
+  id("com.diffplug.spotless") version "5.14.2"
 }
 
 repositories { mavenCentral() }
