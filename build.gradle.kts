@@ -156,6 +156,7 @@ nativeImage {
       "-H:+AddAllCharsets",
       "-H:ConfigurationFileDirectories=native-image-config",
       "-H:+RemoveUnusedSymbols",
+      "-J-Dfile.encoding=UTF-8",
       // "-H:+PrintUniverse",
       // "--dry-run",
       )
