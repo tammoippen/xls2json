@@ -6,6 +6,7 @@ import java.io.File
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.Month
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class WorkbookTest {
@@ -23,6 +24,7 @@ class WorkbookTest {
     wbk.close()
   }
 
+  @Test
   fun `sheetnames of sample-file with multiple sheets`() {
     val classloader = this.javaClass.getClassLoader()
     val file = File(classloader.getResource("sampleTwoSheets.xls").getFile())
