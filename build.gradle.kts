@@ -119,9 +119,9 @@ tasks.jacocoTestReport {
   dependsOn(tasks.test) // tests are required to run before generating the report
 
   reports {
-    xml.isEnabled = true
-    csv.isEnabled = true
-    html.isEnabled = true
+    xml.required.set(true)
+    csv.required.set(true)
+    html.required.set(true)
   }
   sourceSets(sourceSets.main.get())
 }
