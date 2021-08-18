@@ -14,14 +14,14 @@ trace:
 		src/test/resources/sample.xls \
 		src/test/resources/sampleTwoSheets.xls \
 		src/test/resources/empty.xls \
-		> /dev/null
+		> /dev/null 2> /dev/null
 	$(JAVA_HOME)/bin/java -agentlib:native-image-agent=config-merge-dir=native-image-config \
 		-jar build/libs/xls2json-*-all.jar --pretty \
 		src/test/resources/sample.xlsx \
 		src/test/resources/sample.xls \
 		src/test/resources/sampleTwoSheets.xls \
 		src/test/resources/empty.xls \
-		> /dev/null
+		> /dev/null 2> /dev/null
 
 
 amd64-docker:

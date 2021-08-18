@@ -317,6 +317,10 @@
   "methods":[{"name":"<init>","parameterTypes":["org.apache.xmlbeans.SchemaType"] }]
 },
 {
+  "name":"org.openxmlformats.schemas.spreadsheetml.x2006.main.impl.CTCommentsImpl",
+  "methods":[{"name":"<init>","parameterTypes":["org.apache.xmlbeans.SchemaType"] }]
+},
+{
   "name":"org.openxmlformats.schemas.spreadsheetml.x2006.main.impl.CTDefinedNameImpl",
   "methods":[{"name":"<init>","parameterTypes":["org.apache.xmlbeans.SchemaType"] }]
 },
@@ -446,6 +450,10 @@
 },
 {
   "name":"org.openxmlformats.schemas.spreadsheetml.x2006.main.impl.CalcChainDocumentImpl",
+  "methods":[{"name":"<init>","parameterTypes":["org.apache.xmlbeans.SchemaType"] }]
+},
+{
+  "name":"org.openxmlformats.schemas.spreadsheetml.x2006.main.impl.CommentsDocumentImpl",
   "methods":[{"name":"<init>","parameterTypes":["org.apache.xmlbeans.SchemaType"] }]
 },
 {
