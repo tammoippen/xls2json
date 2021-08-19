@@ -13,6 +13,7 @@
     {"pattern":"\\Qorg/apache/poi/schemas/ooxml/system/ooxml/ctcellstylexfsa81ftype.xsb\\E"}, 
     {"pattern":"\\Qorg/apache/poi/schemas/ooxml/system/ooxml/ctcellxfs1322type.xsb\\E"}, 
     {"pattern":"\\Qorg/apache/poi/schemas/ooxml/system/ooxml/ctcola95ftype.xsb\\E"}, 
+    {"pattern":"\\Qorg/apache/poi/schemas/ooxml/system/ooxml/ctcolors6579type.xsb\\E"}, 
     {"pattern":"\\Qorg/apache/poi/schemas/ooxml/system/ooxml/ctcols627ctype.xsb\\E"}, 
     {"pattern":"\\Qorg/apache/poi/schemas/ooxml/system/ooxml/ctcommentse3bdtype.xsb\\E"}, 
     {"pattern":"\\Qorg/apache/poi/schemas/ooxml/system/ooxml/ctdefinedname9413type.xsb\\E"}, 
@@ -83,7 +84,8 @@
     {"pattern":"\\Qorg/apache/xmlbeans/metadata/system/sXMLSCHEMA/TypeSystemHolder.class\\E"}, 
     {"pattern":"\\Qorg/apache/xmlbeans/metadata/system/sXMLSCHEMA/index.xsb\\E"}, 
     {"pattern":"\\Qorg/apache/xmlbeans/metadata/system/sXMLTOOLS/TypeSystemHolder.class\\E"}, 
-    {"pattern":"\\Qorg/apache/xmlbeans/metadata/system/sXMLTOOLS/index.xsb\\E"}
+    {"pattern":"\\Qorg/apache/xmlbeans/metadata/system/sXMLTOOLS/index.xsb\\E"}, 
+    {"pattern":"^org/apache/poi/schemas/ooxml/system/ooxml/.*\\.xsb$"}
   ]},
   "bundles":[
     {"name":"org.apache.xalan.res.XSLTErrorResources"}, 
