@@ -2,7 +2,7 @@ import org.gradle.internal.os.OperatingSystem
 
 println(OperatingSystem.current())
 
-version = "1.2.1"
+version = "1.2.2"
 
 val poiVersion = "5.2.2"
 val picocliVersion = "4.6.3"
