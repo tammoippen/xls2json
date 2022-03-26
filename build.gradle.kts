@@ -33,6 +33,8 @@ plugins {
 repositories { mavenCentral() }
 
 dependencies {
+  // ./gradlew -q dependencies --configuration runtimeClasspath
+
   // Align versions of all Kotlin components
   implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
@@ -46,6 +48,7 @@ dependencies {
   implementation("org.apache.poi:poi:$poiVersion")
   implementation("org.apache.poi:poi-ooxml:$poiVersion")
   implementation("org.apache.poi:poi-ooxml-full:$poiVersion")
+  implementation("org.apache.logging.log4j:log4j-core:2.17.2")
   // json
   implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
 

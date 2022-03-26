@@ -3,6 +3,8 @@ package xls2json
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
+import org.apache.logging.log4j.core.config.Configurator
+import org.apache.logging.log4j.core.config.NullConfiguration
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Model.CommandSpec
@@ -103,6 +105,7 @@ class XLS2Json(val istty: Boolean = false) : Callable<Int> {
   @Parameters(description = ["xls(x|m)-file(s) to transform"]) var files: List<File> = listOf()
 
   override fun call(): Int {
+    Configurator.initialize(NullConfiguration())
     val out = spec.commandLine().getOut()
     val err = spec.commandLine().getErr()
 

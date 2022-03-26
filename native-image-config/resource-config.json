@@ -2,7 +2,19 @@
   "resources":{
   "includes":[
     {
+      "pattern":"\\QMETA-INF/org/apache/logging/log4j/core/config/plugins/Log4j2Plugins.dat\\E"
+    }, 
+    {
       "pattern":"\\QMETA-INF/services/javax.xml.transform.TransformerFactory\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/services/org.apache.logging.log4j.core.util.ContextDataProvider\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/services/org.apache.logging.log4j.spi.Provider\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/services/org.apache.logging.log4j.util.PropertySource\\E"
     }, 
     {
       "pattern":"\\QMETA-INF/services/org.apache.poi.ss.usermodel.WorkbookProvider\\E"
@@ -265,7 +277,11 @@
       "name":"org.apache.xml.serializer.XMLEntities"
     }, 
     {
-      "name":"org.apache.xmlbeans.impl.regex.message"
+      "name":"org.apache.xmlbeans.impl.regex.message",
+      "locales":[
+        "", 
+        "und"
+      ]
     }
   ]
 }
