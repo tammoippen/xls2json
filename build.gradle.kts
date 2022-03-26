@@ -4,17 +4,17 @@ println(OperatingSystem.current())
 
 version = "1.2.1"
 
-val poiVersion = "5.0.0"
-val picocliVersion = "4.6.1"
-val jacksonVersion = "2.12.4"
+val poiVersion = "5.2.2"
+val picocliVersion = "4.6.3"
+val jacksonVersion = "2.13.2"
 // configure outputs of shadowJar for nativeImage
 val shadowJarConf by configurations.creating
 
 plugins {
   idea
   // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-  id("org.jetbrains.kotlin.jvm") version "1.5.20"
-  kotlin("kapt") version "1.5.20"
+  id("org.jetbrains.kotlin.jvm") version "1.6.10"
+  kotlin("kapt") version "1.6.10"
 
   jacoco
   id("org.barfuin.gradle.jacocolog") version "2.0.0"
@@ -24,10 +24,10 @@ plugins {
 
   id("org.mikeneck.graalvm-native-image") version "1.4.1"
   // shadowJar / uberJar
-  id("com.github.johnrengelman.shadow") version "7.0.0"
+  id("com.github.johnrengelman.shadow") version "7.1.2"
 
-  id("com.github.ben-manes.versions") version "0.39.0"
-  id("com.diffplug.spotless") version "5.14.2"
+  id("com.github.ben-manes.versions") version "0.42.0"
+  id("com.diffplug.spotless") version "6.3.0"
 }
 
 repositories { mavenCentral() }

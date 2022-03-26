@@ -9,7 +9,7 @@ import java.time.Month
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class WorkbookTest {
+class WorkbookTests {
 
   @ParameterizedTest
   @CsvSource("sample.xls", "sample.xlsx")
