@@ -48,6 +48,7 @@ dependencies {
   implementation("org.apache.poi:poi:$poiVersion")
   implementation("org.apache.poi:poi-ooxml:$poiVersion")
   implementation("org.apache.poi:poi-ooxml-full:$poiVersion")
+  // poi uses log4j-api - mostly for debug stuff -> disable
   implementation("org.apache.logging.log4j:log4j-to-slf4j:2.17.2")
   implementation("org.slf4j:slf4j-nop:1.7.36")
 
