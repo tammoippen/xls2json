@@ -140,8 +140,7 @@
   "name":"java.lang.Double",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true,
-  "fields":[{"name":"TYPE"}]
+  "allDeclaredConstructors":true
 },
 {
   "name":"java.lang.Float",
@@ -1198,6 +1197,10 @@
 },
 {
   "name":"org.apache.logging.log4j.message.ReusableMessageFactory",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.apache.logging.slf4j.SLF4JLoggerContextFactory",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {

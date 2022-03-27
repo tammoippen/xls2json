@@ -266,6 +266,9 @@
       "pattern":"\\Qorg/apache/xmlbeans/metadata/system/sXMLTOOLS/index.xsb\\E"
     }, 
     {
+      "pattern":"\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
+    }, 
+    {
       "pattern":"^org/apache/poi/schemas/ooxml/system/ooxml/.*\\.xsb$"
     }
   ]},

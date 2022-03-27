@@ -48,7 +48,9 @@ dependencies {
   implementation("org.apache.poi:poi:$poiVersion")
   implementation("org.apache.poi:poi-ooxml:$poiVersion")
   implementation("org.apache.poi:poi-ooxml-full:$poiVersion")
-  implementation("org.apache.logging.log4j:log4j-core:2.17.2")
+  implementation("org.apache.logging.log4j:log4j-to-slf4j:2.17.2")
+  implementation("org.slf4j:slf4j-nop:1.7.36")
+
   // json
   implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
 
@@ -105,7 +107,7 @@ tasks.spotlessApply { dependsOn(":generateBuildInfo") }
 
 tasks.spotlessCheck { dependsOn(":generateBuildInfo") }
 
-tasks.compileJava { options.release.set(11) }
+tasks.compileJava { options.release.set(8) }
 
 tasks.withType<Test> {
   useJUnitPlatform()
