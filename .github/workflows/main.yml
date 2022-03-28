@@ -140,7 +140,10 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         # if: startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest'
         run: |
-          docker build --build-arg ARCH=arm64v8/ --build-arg GVM_PLATFORM=aarch64 -t xls2json-builder:arm64v8 .
+          export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+          version=$(echo -n ${{github.ref}} | cut -c12-)
+          tag=$(echo -n ${{github.ref}} | cut -c11-)
+          docker build --platform linux/arm64 --build-arg ARCH=arm64v8/ --build-arg GVM_PLATFORM=aarch64 -t xls2json-builder:arm64v8 .
           docker run --platform linux/arm64 -it --rm -v $(PWD):/app xls2json-builder:arm64v8 bash -c "./gradlew nativeImage"
           cp build/executable/xls2json xls2json-${{runner.os}}-arm64-$version
           # gh release upload $tag xls2json-${{runner.os}}-arm64-$version.zip
