@@ -122,3 +122,25 @@ jobs:
           $tag='${{github.ref}}'.substring(10)
           Compress-Archive -Path build/executable/ -DestinationPath xls2json-${{runner.os}}-amd64-$version.zip
           gh release upload $tag xls2json-${{runner.os}}-amd64-$version.zip
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+        if: matrix.os == 'ubuntu-latest'
+        # if: startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest'
+        with:
+          platforms: all
+
+      - name: Set up Docker Buildx
+        id: buildx
+        if: matrix.os == 'ubuntu-latest'
+        # if: startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest'
+        uses: docker/setup-buildx-action@master
+
+      - name: Build docker image
+        if: matrix.os == 'ubuntu-latest'
+        # if: startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest'
+        run: |
+          docker build --build-arg ARCH=arm64v8/ --build-arg GVM_PLATFORM=aarch64 -t xls2json-builder:arm64v8 .
+          docker run --platform linux/arm64 -it --rm -v $(PWD):/app xls2json-builder:arm64v8 bash -c "./gradlew nativeImage"
+          cp build/executable/xls2json xls2json-${{runner.os}}-arm64-$version
+          # gh release upload $tag xls2json-${{runner.os}}-arm64-$version.zip
