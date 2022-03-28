@@ -143,7 +143,7 @@ jobs:
           export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
           version=$(echo -n ${{github.ref}} | cut -c12-)
           tag=$(echo -n ${{github.ref}} | cut -c11-)
-          docker buildx --platform linux/arm64 --build-arg ARCH=arm64v8/ --build-arg GVM_PLATFORM=aarch64 -t xls2json-builder:arm64v8 .
+          docker build --platform linux/arm64 --build-arg ARCH=arm64v8/ --build-arg GVM_PLATFORM=aarch64 -t xls2json-builder:arm64v8 .
           docker run --platform linux/arm64 -it --rm -v $PWD:/app xls2json-builder:arm64v8 bash -c "./gradlew nativeImage"
           cp build/executable/xls2json xls2json-${{runner.os}}-arm64-$version
           # gh release upload $tag xls2json-${{runner.os}}-arm64-$version.zip
