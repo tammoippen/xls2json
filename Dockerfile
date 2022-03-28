@@ -1,6 +1,6 @@
 # amd64/ or arm64v8/
 ARG ARCH=
-FROM ${ARCH}debian:10-slim
+FROM ${ARCH}debian:11-slim
 
 # get curl
 RUN apt-get update \
@@ -14,8 +14,8 @@ RUN apt-get update \
 
 WORKDIR /data
 
-ARG GRAALVM_VERSION=21.2.0
-ARG GVM_JAVA_VERSION=java11
+ARG GRAALVM_VERSION=22.0.0.2
+ARG GVM_JAVA_VERSION=java17
 # amd64 or aarch64
 ARG GVM_PLATFORM=aarch64
 
