@@ -1265,6 +1265,14 @@
   "fields":[{"name":"table"}]
 },
 {
+  "name":"org.openxmlformats.schemas.spreadsheetml.x2006.main.impl.CTBookViewImpl",
+  "methods":[{"name":"<init>","parameterTypes":["org.apache.xmlbeans.SchemaType"] }]
+},
+{
+  "name":"org.openxmlformats.schemas.spreadsheetml.x2006.main.impl.CTBookViewsImpl",
+  "methods":[{"name":"<init>","parameterTypes":["org.apache.xmlbeans.SchemaType"] }]
+},
+{
   "name":"org.openxmlformats.schemas.spreadsheetml.x2006.main.impl.CTBorderImpl",
   "methods":[{"name":"<init>","parameterTypes":["org.apache.xmlbeans.SchemaType"] }]
 },

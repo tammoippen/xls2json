@@ -20,10 +20,19 @@
       "pattern":"\\QMETA-INF/services/org.apache.poi.ss.usermodel.WorkbookProvider\\E"
     }, 
     {
+      "pattern":"\\Qorg/apache/poi/schemas/ooxml/system/ooxml/.*.xsb\\E"
+    }, 
+    {
       "pattern":"\\Qorg/apache/poi/schemas/ooxml/system/ooxml/calcchainfc37doctype.xsb\\E"
     }, 
     {
       "pattern":"\\Qorg/apache/poi/schemas/ooxml/system/ooxml/comments4c11doctype.xsb\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/poi/schemas/ooxml/system/ooxml/ctbookviewf677type.xsb\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/apache/poi/schemas/ooxml/system/ooxml/ctbookviewsb864type.xsb\\E"
     }, 
     {
       "pattern":"\\Qorg/apache/poi/schemas/ooxml/system/ooxml/ctborderf935type.xsb\\E"
@@ -267,9 +276,6 @@
     }, 
     {
       "pattern":"\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
-    }, 
-    {
-      "pattern":"^org/apache/poi/schemas/ooxml/system/ooxml/.*\\.xsb$"
     }
   ]},
   "bundles":[
