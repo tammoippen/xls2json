@@ -1,3 +1,4 @@
+import org.apache.tools.ant.filters.FixCrLfFilter
 import org.gradle.internal.os.OperatingSystem
 
 println(OperatingSystem.current())
@@ -91,13 +92,16 @@ configure<com.diffplug.gradle.spotless.SpotlessExtension> {
 kapt { arguments { arg("project", "${project.name}") } }
 
 tasks.register<Copy>("generateBuildInfo") {
-  val templateContext = mutableMapOf("version" to project.version)
+  val templateContext = mapOf("version" to project.version)
   // for gradle up-to-date check
   inputs.properties(templateContext)
   inputs.files(fileTree("src/template/kotlin"))
   from("src/template/kotlin")
   into("$buildDir/generated/kotlin")
   expand(templateContext)
+  // make line end with \n also on windows
+  filter<FixCrLfFilter>("eol" to FixCrLfFilter.CrLf.newInstance("lf"))
+  filteringCharset = "UTF-8"
 }
 
 tasks.compileKotlin { dependsOn(":generateBuildInfo") }
