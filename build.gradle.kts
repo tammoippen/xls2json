@@ -4,7 +4,7 @@ println(OperatingSystem.current())
 
 version = "1.2.2"
 
-val poiVersion = "5.2.2"
+val poiVersion = "5.2.3"
 val picocliVersion = "4.6.3"
 val jacksonVersion = "2.13.2"
 // configure outputs of shadowJar for nativeImage
@@ -13,8 +13,8 @@ val shadowJarConf by configurations.creating
 plugins {
   idea
   // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-  id("org.jetbrains.kotlin.jvm") version "1.6.10"
-  kotlin("kapt") version "1.6.10"
+  id("org.jetbrains.kotlin.jvm") version "1.7.20"
+  kotlin("kapt") version "1.7.20"
 
   jacoco
   id("org.barfuin.gradle.jacocolog") version "2.0.0"
@@ -26,8 +26,8 @@ plugins {
   // shadowJar / uberJar
   id("com.github.johnrengelman.shadow") version "7.1.2"
 
-  id("com.github.ben-manes.versions") version "0.42.0"
-  id("com.diffplug.spotless") version "6.3.0"
+  id("com.github.ben-manes.versions") version "0.43.0"
+  id("com.diffplug.spotless") version "6.11.0"
 }
 
 repositories { mavenCentral() }
@@ -49,8 +49,8 @@ dependencies {
   implementation("org.apache.poi:poi-ooxml:$poiVersion")
   implementation("org.apache.poi:poi-ooxml-full:$poiVersion")
   // poi uses log4j-api - mostly for debug stuff -> disable
-  implementation("org.apache.logging.log4j:log4j-to-slf4j:2.17.2")
-  implementation("org.slf4j:slf4j-nop:1.7.36")
+  implementation("org.apache.logging.log4j:log4j-to-slf4j:2.19.0")
+  implementation("org.slf4j:slf4j-nop:2.0.3")
 
   // json
   implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
