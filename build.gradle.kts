@@ -3,9 +3,12 @@ import org.gradle.internal.os.OperatingSystem
 
 println(OperatingSystem.current())
 
-version = "1.2.3-dev"
+version = "1.2.2"
 
-val poiVersion = "5.2.3"
+// since version 5.1.0 POI uses log4j v2, which is not compatible with
+// native image; maybe log4j v2 3.* will be more compatible
+// https://issues.apache.org/jira/browse/LOG4J2-2649?focusedCommentId=17005296&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel
+val poiVersion = "5.0.0"
 val picocliVersion = "4.6.3"
 val jacksonVersion = "2.13.2"
 // configure outputs of shadowJar for nativeImage
@@ -49,11 +52,6 @@ dependencies {
   implementation("org.apache.poi:poi:$poiVersion")
   implementation("org.apache.poi:poi-ooxml:$poiVersion")
   implementation("org.apache.poi:poi-ooxml-full:$poiVersion")
-  // poi uses log4j-api - mostly for debug stuff -> disable
-  // log4j2 2.* is incompatible for native image
-  // https://issues.apache.org/jira/browse/LOG4J2-2649?focusedCommentId=17005296&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel
-  implementation("org.apache.logging.log4j:log4j-to-slf4j:2.18.0")
-  implementation("org.slf4j:slf4j-nop:1.7.36")
 
   // json
   implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")

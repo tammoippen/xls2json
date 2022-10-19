@@ -22,6 +22,10 @@ trace:
 		src/test/resources/sampleTwoSheets.xls \
 		src/test/resources/empty.xls \
 		> /dev/null 2> /dev/null
+	# remove duplicate entries
+	jq 'del(.resources.includes[] | select(.pattern | startswith("\\Qorg/apache/poi/schemas/ooxml/system/ooxml/")))' \
+		native-image-config/resource-config.json > native-image-config/resource-config-short.json
+	mv native-image-config/resource-config-short.json native-image-config/resource-config.json
 
 
 amd64-docker:
