@@ -50,8 +50,10 @@ dependencies {
   implementation("org.apache.poi:poi-ooxml:$poiVersion")
   implementation("org.apache.poi:poi-ooxml-full:$poiVersion")
   // poi uses log4j-api - mostly for debug stuff -> disable
-  implementation("org.apache.logging.log4j:log4j-to-slf4j:2.19.0")
-  implementation("org.slf4j:slf4j-nop:2.0.3")
+  // log4j2 2.* is incompatible for native image
+  // https://issues.apache.org/jira/browse/LOG4J2-2649?focusedCommentId=17005296&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel
+  implementation("org.apache.logging.log4j:log4j-to-slf4j:2.18.0")
+  implementation("org.slf4j:slf4j-nop:1.7.36")
 
   // json
   implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
@@ -148,6 +150,7 @@ distributions {
 
 nativeImage {
   dependsOn(tasks.shadowJar)
+
   runtimeClasspath = shadowJarConf
 
   graalVmHome = System.getProperty("java.home")
